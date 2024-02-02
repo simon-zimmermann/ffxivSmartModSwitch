@@ -13,15 +13,13 @@ namespace SmartModSwitch
 
         public bool OverlayActive { get; set; } = false;
 
-        // the below exist just to make saving less cumbersome
+        // boilerplate code to save config (copied from plugin template)
         [NonSerialized]
         private DalamudPluginInterface? PluginInterface;
-
         public void Initialize(DalamudPluginInterface pluginInterface)
         {
             this.PluginInterface = pluginInterface;
         }
-
         public void Save()
         {
             this.PluginInterface!.SavePluginConfig(this);

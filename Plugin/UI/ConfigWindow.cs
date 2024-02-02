@@ -6,16 +6,18 @@ using ImGuiNET;
 namespace SmartModSwitch.Windows;
 
 public class ConfigWindow : Window, IDisposable {
+	private readonly SmartModSwitch smsw;
 	private Configuration configuration;
 
-	public ConfigWindow(Plugin plugin) : base(
+	public ConfigWindow(SmartModSwitch smsw) : base(
 		"A Wonderful Configuration Window",
 		ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
 		ImGuiWindowFlags.NoScrollWithMouse) {
+		this.smsw = smsw;
 		this.Size = new Vector2(232, 75);
 		this.SizeCondition = ImGuiCond.Always;
 
-		this.configuration = plugin.Configuration;
+		this.configuration = smsw.Configuration;
 	}
 
 	public void Dispose() { }

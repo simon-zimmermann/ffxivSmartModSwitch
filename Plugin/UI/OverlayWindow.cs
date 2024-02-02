@@ -8,9 +8,9 @@ namespace SmartModSwitch.Windows;
 
 public class OverlayWindow : Window, IDisposable
 {
-    private Plugin Plugin;
+    private readonly SmartModSwitch smsw;
 
-    public OverlayWindow(Plugin plugin) : base(
+    public OverlayWindow(SmartModSwitch smsw) : base(
         "OverlayWindow", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoTitleBar)
     {
         this.SizeConstraints = new WindowSizeConstraints
@@ -20,8 +20,7 @@ public class OverlayWindow : Window, IDisposable
         };
         this.BgAlpha = 0.5f;
         this.Flags |= ImGuiWindowFlags.NoMove;
-
-        this.Plugin = plugin;
+        this.smsw = smsw;
     }
 
     public void Dispose()
@@ -30,11 +29,11 @@ public class OverlayWindow : Window, IDisposable
 
     public override void Draw()
     {
-        ImGui.Text($"The random config bool is {this.Plugin.Configuration.SomePropertyToBeSavedAndWithADefault}");
+        ImGui.Text($"The random config bool is {smsw.Configuration.SomePropertyToBeSavedAndWithADefault}");
 
         if (ImGui.Button("Show Settings"))
         {
-            this.Plugin.DrawConfigUI();
+            smsw.UIManager.DrawConfigUI();
         }
 
         ImGui.Spacing();

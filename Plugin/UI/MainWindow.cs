@@ -8,11 +8,11 @@ namespace SmartModSwitch.Windows;
 
 public class MainWindow : Window, IDisposable {
 	private IDalamudTextureWrap GoatImage;
-	private Plugin Plugin;
+	private readonly SmartModSwitch smsw;
 	private Configuration Configuration;
 
 
-	public MainWindow(Plugin plugin, IDalamudTextureWrap goatImage) : base(
+	public MainWindow(SmartModSwitch smsw, IDalamudTextureWrap goatImage) : base(
 		"My Amazing Window", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse) {
 		this.SizeConstraints = new WindowSizeConstraints {
 			MinimumSize = new Vector2(375, 330),
@@ -20,8 +20,8 @@ public class MainWindow : Window, IDisposable {
 		};
 
 		this.GoatImage = goatImage;
-		this.Plugin = plugin;
-		this.Configuration = plugin.Configuration;
+		this.smsw = smsw;
+		this.Configuration = smsw.Configuration;
 
 	}
 
@@ -30,10 +30,10 @@ public class MainWindow : Window, IDisposable {
 	}
 
 	public override void Draw() {
-		ImGui.Text($"The random config bool is {this.Plugin.Configuration.SomePropertyToBeSavedAndWithADefault}");
+		ImGui.Text($"The random config bool is {smsw.Configuration.SomePropertyToBeSavedAndWithADefault}");
 
 		if (ImGui.Button("Show Settings")) {
-			this.Plugin.DrawConfigUI();
+			smsw.UIManager.DrawConfigUI();
 		}
 
 		ImGui.Spacing();
@@ -49,7 +49,7 @@ public class MainWindow : Window, IDisposable {
 			// can save immediately on change, if you don't want to provide a "Save and Close" button
 			this.Configuration.Save();
 
-			Plugin.OverlayWindow.IsOpen = val;
+			smsw.UIManager.OverlayWindow.IsOpen = val;
 		}
 	}
 }

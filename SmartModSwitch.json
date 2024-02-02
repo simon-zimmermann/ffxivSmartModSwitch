@@ -1,12 +1,12 @@
 {
-    "Author": "your name here",
+    "Author": "zfox",
     "Name": "SmartModSwitch",
-    "Punchline": "A short one-liner that shows up in /xlplugins.",
-    "Description": "A description that shows up in /xlplugins. List any major slash-command(s).",
+    "Punchline": "Automatically switch active Penumbra mods when using emotes.",
+    "Description": "Adds overlay buttons to  switch active Penumbra mods and execute the connected emote. \nYou can now wasily have multiple mods overwriting the same emote and use all emotes easily. \nThis mod obviously needs Penumbra to work. ",
     "ApplicableVersion": "any",
     "Tags": [
-        "sample",
-        "plugin",
-        "goats"
+        "UI",
+        "utility",
+        "emote"
     ]
 }
