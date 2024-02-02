@@ -6,10 +6,12 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using SmartModSwitch.Windows;
 
-namespace SmartModSwitch {
-	public sealed class Plugin : IDalamudPlugin {
+namespace SmartModSwitch
+{
+	public sealed class Plugin : IDalamudPlugin
+	{
 		public string Name => "SmartModSwitch";
-		private const string CommandName = "/pmycommand";
+		private const string commandName = "/pmycommand";
 
 		private DalamudPluginInterface PluginInterface { get; init; }
 		private ICommandManager CommandManager { get; init; }
@@ -22,7 +24,8 @@ namespace SmartModSwitch {
 
 		public Plugin(
 			[RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
-			[RequiredVersion("1.0")] ICommandManager commandManager) {
+			[RequiredVersion("1.0")] ICommandManager commandManager)
+		{
 			this.PluginInterface = pluginInterface;
 			this.CommandManager = commandManager;
 
@@ -41,7 +44,8 @@ namespace SmartModSwitch {
 			WindowSystem.AddWindow(MainWindow);
 			WindowSystem.AddWindow(OverlayWindow);
 
-			this.CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand) {
+			this.CommandManager.AddHandler(commandName, new CommandInfo(OnCommand)
+			{
 				HelpMessage = "A useful message to display in /xlhelp"
 			});
 
@@ -49,25 +53,29 @@ namespace SmartModSwitch {
 			this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
 		}
 
-		public void Dispose() {
+		public void Dispose()
+		{
 			this.WindowSystem.RemoveAllWindows();
 
 			ConfigWindow.Dispose();
 			MainWindow.Dispose();
 
-			this.CommandManager.RemoveHandler(CommandName);
+			this.CommandManager.RemoveHandler(commandName);
 		}
 
-		private void OnCommand(string command, string args) {
+		private void OnCommand(string command, string args)
+		{
 			// in response to the slash command, just display our main ui
 			MainWindow.IsOpen = true;
 		}
 
-		private void DrawUI() {
+		private void DrawUI()
+		{
 			this.WindowSystem.Draw();
 		}
 
-		public void DrawConfigUI() {
+		public void DrawConfigUI()
+		{
 			ConfigWindow.IsOpen = true;
 		}
 	}
