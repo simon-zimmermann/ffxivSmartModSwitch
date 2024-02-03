@@ -46,19 +46,19 @@ public sealed class CommandHandler : IDisposable
         var currentCollection = pGetColl!.Invoke();
         smsw.Logger.Info("Current collection: {0}", currentCollection);
 
+        var modlist = smsw.PenumbraIPC.GetModList();
+        smsw.Logger.Info("Modlist:");
+        foreach (var mod in modlist)
+        {
+            smsw.Logger.Info("Mod: {0} {1}", mod.ModName, mod.PenumbraPath);
+        }
+
         // var penumbraConfig = Ipc.GetConfiguration.Subscriber(smsw.PluginInterface).Invoke();
         // smsw.Logger.Info("Penumbra config: {0}", penumbraConfig);
 
-        var pGetMods = Ipc.GetMods.Subscriber(smsw.PluginInterface);
-        var mods = pGetMods!.Invoke();
-        foreach (var mod in mods)
-        {
-            smsw.Logger.Info("Mod: {0} {1}", mod.Item1, mod.Item2);
-            var path = Ipc.GetModPath.Subscriber(smsw.PluginInterface).Invoke(mod.Item1, mod.Item2);
-            smsw.Logger.Info("Mod path: {0}", path);
-        }
-        var success = Ipc.TrySetMod.Subscriber(smsw.PluginInterface).Invoke("Zfox Serious Base", "dances/memes/[OCN] Drop the bass","[OCN] Drop the bass",false);
-        smsw.Logger.Info("TrySetMod success: {0}", success);
+ 
+        // var success = Ipc.TrySetMod.Subscriber(smsw.PluginInterface).Invoke("Zfox Serious Base", "dances/memes/[OCN] Drop the bass","[OCN] Drop the bass",false);
+        // smsw.Logger.Info("TrySetMod success: {0}", success);
 
 
         // var pGetChangedItems = Penumbra.Api.Ipc.GetChangedItems.Subscriber(smsw.PluginInterface);
@@ -67,29 +67,29 @@ public sealed class CommandHandler : IDisposable
         // {
         //     smsw.Logger.Info("Changed:  {0}  {1}", changedItem.Key, changedItem.Value ?? "");
         // }
-        var res = Ipc.GetChangedItems.Subscriber(smsw.PluginInterface).Invoke("Zfox Serious Base");
-        smsw.Logger.Info("Return value");
-        smsw.Logger.Info("res type: {0}", res.GetType());
-        foreach (var r in res)
-        {
-            var name = r.Key;
-            var obj = r.Value;
-            if (obj == null)
-            {
-                continue;
-            }
-            if (obj is Emote)
-            {
-                var emote = (Emote)obj;
-                smsw.Logger.Info("Changed emote: {0}", emote.Name);
-                //var json = JsonConvert.SerializeObject(obj, Formatting.Indented, 
-                //            new JsonSerializerSettings { 
-                //                   ReferenceLoopHandling = ReferenceLoopHandling.Ignore 
-                //            });
-                ////smsw.Logger.Info("Emote JSON: {0}", json);
-                break;
-            }
-        }
+        // var res = Ipc.GetChangedItems.Subscriber(smsw.PluginInterface).Invoke("Zfox Serious Base");
+        // smsw.Logger.Info("Return value");
+        // smsw.Logger.Info("res type: {0}", res.GetType());
+        // foreach (var r in res)
+        // {
+        //     var name = r.Key;
+        //     var obj = r.Value;
+        //     if (obj == null)
+        //     {
+        //         continue;
+        //     }
+        //     if (obj is Emote)
+        //     {
+        //         var emote = (Emote)obj;
+        //         smsw.Logger.Info("Changed emote: {0}", emote.Name);
+        //         //var json = JsonConvert.SerializeObject(obj, Formatting.Indented, 
+        //         //            new JsonSerializerSettings { 
+        //         //                   ReferenceLoopHandling = ReferenceLoopHandling.Ignore 
+        //         //            });
+        //         ////smsw.Logger.Info("Emote JSON: {0}", json);
+        //         break;
+        //     }
+        // }
 
         // var res2 = Ipc.GetPlayerResourceTrees.Subscriber(smsw.PluginInterface).Invoke(true);
         // smsw.Logger.Info("Return value");

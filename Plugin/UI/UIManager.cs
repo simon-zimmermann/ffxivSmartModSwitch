@@ -12,6 +12,7 @@ public sealed class UIManager : IDisposable
 	public ConfigWindow ConfigWindow { get; init; }
 	public MainWindow MainWindow { get; init; }
 	public OverlayWindow OverlayWindow { get; init; }
+	public NewAssignmentWindow NewAssignmentWindow { get; init; }
 	public UIManager(SmartModSwitch smsw)
 	{
 		this.smsw = smsw;
@@ -23,13 +24,19 @@ public sealed class UIManager : IDisposable
 		ConfigWindow = new ConfigWindow(smsw);
 		MainWindow = new MainWindow(smsw, goatImage);
 		OverlayWindow = new OverlayWindow(smsw);
+		NewAssignmentWindow = new NewAssignmentWindow(smsw);
 
 		WindowSystem.AddWindow(ConfigWindow);
 		WindowSystem.AddWindow(MainWindow);
 		WindowSystem.AddWindow(OverlayWindow);
+		WindowSystem.AddWindow(NewAssignmentWindow);
 
 		smsw.PluginInterface.UiBuilder.Draw += DrawUI;
 		smsw.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
+		
+		//debug
+		MainWindow.IsOpen = true;
+		
 	}
 
 	private void DrawUI()
@@ -47,6 +54,7 @@ public sealed class UIManager : IDisposable
 		ConfigWindow.Dispose();
 		MainWindow.Dispose();
 		OverlayWindow.Dispose();
+		NewAssignmentWindow.Dispose();
 	}
 
 }

@@ -1,6 +1,8 @@
+using Dalamud.Game.Config;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
+using SmartModSwitch.Windows;
 
 namespace SmartModSwitch;
 
@@ -12,22 +14,29 @@ public sealed class SmartModSwitch : IDalamudPlugin
 	public DalamudPluginInterface PluginInterface { get; init; }
 	public ICommandManager CommandManager { get; init; }
 	public IPluginLog Logger { get; init; }
+	public IDataManager DataManager { get; init; }
+	public IGameInteropProvider GameInteropProvider { get; init; }
 
 	// plugin function modules
 	public Configuration Configuration { get; init; }
 	public CommandHandler CommandHandler { get; init; }
 	public UIManager UIManager { get; init; }
-	public ExternalConfigReader ExternalConfigReader { get; init; }
+	public PenumbraIPC PenumbraIPC { get; init; }
+	public ChatHelper ChatHelper { get; init; }
 
 	public SmartModSwitch(
 		[RequiredVersion("1.0")] DalamudPluginInterface _pluginInterface,
 		[RequiredVersion("1.0")] ICommandManager _commandManager,
-		[RequiredVersion("1.0")] IPluginLog _pluginLog)
+		[RequiredVersion("1.0")] IPluginLog _pluginLog,
+		[RequiredVersion("1.0")] IDataManager _dataManager,
+		[RequiredVersion("1.0")] IGameInteropProvider _gameInteropProvider)
 	{
 		// init injected services
 		PluginInterface = _pluginInterface;
 		CommandManager = _commandManager;
 		Logger = _pluginLog;
+		DataManager = _dataManager;
+		GameInteropProvider = _gameInteropProvider;
 
 		Logger.Info("Initializing SmartModSwitch");
 
@@ -37,7 +46,12 @@ public sealed class SmartModSwitch : IDalamudPlugin
 
 		CommandHandler = new CommandHandler(this);
 		UIManager = new UIManager(this);
-		ExternalConfigReader = new ExternalConfigReader(this);
+		PenumbraIPC = new PenumbraIPC(this);
+		ChatHelper = new ChatHelper(this);
+		
+		
+		ChatHelper.SendSanitizedChatMessage("/echo wat");
+
 	}
 
 	public void Dispose()
@@ -45,7 +59,7 @@ public sealed class SmartModSwitch : IDalamudPlugin
 		Configuration.Save();
 		UIManager.Dispose();
 		CommandHandler.Dispose();
-		ExternalConfigReader.Dispose();
+		PenumbraIPC.Dispose();
 	}
 
 }
