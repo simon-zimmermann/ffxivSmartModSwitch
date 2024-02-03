@@ -11,5 +11,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Visible>false</Visible>
     </Content>
+    <PackageReference Include="Penumbra.Api" Version="1.0.14" />
   </ItemGroup>
 </Project>

@@ -17,6 +17,7 @@ public sealed class SmartModSwitch : IDalamudPlugin
 	public Configuration Configuration { get; init; }
 	public CommandHandler CommandHandler { get; init; }
 	public UIManager UIManager { get; init; }
+	public ExternalConfigReader ExternalConfigReader { get; init; }
 
 	public SmartModSwitch(
 		[RequiredVersion("1.0")] DalamudPluginInterface _pluginInterface,
@@ -35,8 +36,8 @@ public sealed class SmartModSwitch : IDalamudPlugin
 		Configuration.Initialize(PluginInterface);
 
 		CommandHandler = new CommandHandler(this);
-
 		UIManager = new UIManager(this);
+		ExternalConfigReader = new ExternalConfigReader(this);
 	}
 
 	public void Dispose()
@@ -44,6 +45,7 @@ public sealed class SmartModSwitch : IDalamudPlugin
 		Configuration.Save();
 		UIManager.Dispose();
 		CommandHandler.Dispose();
+		ExternalConfigReader.Dispose();
 	}
 
 }
