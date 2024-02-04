@@ -50,7 +50,7 @@ public sealed class SmartModSwitch : IDalamudPlugin {
 		ChatHelper = new ChatHelper(this);
 
 
-		ChatHelper.SendSanitizedChatMessage("/echo wat");
+		//ChatHelper.SendSanitizedChatMessage("/echo wat");
 
 	}
 

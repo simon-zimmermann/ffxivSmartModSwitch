@@ -7,7 +7,7 @@ public class ImGuiUtil {
     public static float CalcButtonWidth(string text) {
         return ImGui.CalcTextSize(text).X + ImGui.GetStyle().ItemInnerSpacing.X * 2 + ImGui.GetStyle().FramePadding.X * 2;
     }
-    public static bool AddButton() {
+    public static bool IconButtonIconAdd() {
         var label = FontAwesomeIcon.Plus.ToIconString();
         ImGui.PushFont(UiBuilder.IconFont);
         bool ret = ImGui.Button(label);
@@ -21,7 +21,7 @@ public class ImGuiUtil {
         ImGui.PopFont();
         return size;
     }
-    public static bool DeleteButton() {
+    public static bool IconButtonDelete() {
         bool ret = false;
         bool isEnabled = ImGui.IsKeyDown(ImGuiKey.ModCtrl);
 
