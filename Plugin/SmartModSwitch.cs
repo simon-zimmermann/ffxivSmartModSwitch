@@ -2,7 +2,9 @@ using Dalamud.Game.Config;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using SmartModSwitch.Windows;
+using SmartModSwitch.UI;
+using SmartModSwitch.Data;
+using SmartModSwitch.Interop;
 
 namespace SmartModSwitch;
 
@@ -18,7 +20,7 @@ public sealed class SmartModSwitch : IDalamudPlugin
 	public IGameInteropProvider GameInteropProvider { get; init; }
 
 	// plugin function modules
-	public Configuration Configuration { get; init; }
+	public Config Config { get; init; }
 	public CommandHandler CommandHandler { get; init; }
 	public UIManager UIManager { get; init; }
 	public PenumbraIPC PenumbraIPC { get; init; }
@@ -41,8 +43,8 @@ public sealed class SmartModSwitch : IDalamudPlugin
 		Logger.Info("Initializing SmartModSwitch");
 
 		// plugin function modules
-		Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-		Configuration.Initialize(PluginInterface);
+		Config = PluginInterface.GetPluginConfig() as Config ?? new Config();
+		Config.Initialize(this);
 
 		CommandHandler = new CommandHandler(this);
 		UIManager = new UIManager(this);
@@ -56,7 +58,7 @@ public sealed class SmartModSwitch : IDalamudPlugin
 
 	public void Dispose()
 	{
-		Configuration.Save();
+		Config.Save();
 		UIManager.Dispose();
 		CommandHandler.Dispose();
 		PenumbraIPC.Dispose();

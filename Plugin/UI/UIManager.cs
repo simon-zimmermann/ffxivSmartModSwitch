@@ -1,9 +1,9 @@
 using System;
-using SmartModSwitch.Windows;
+using SmartModSwitch.UI;
 using Dalamud.Interface.Windowing;
 using System.IO;
 
-namespace SmartModSwitch;
+namespace SmartModSwitch.UI;
 
 public sealed class UIManager : IDisposable
 {

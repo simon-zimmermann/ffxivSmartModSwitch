@@ -9,8 +9,9 @@ using System.Linq;
 using Penumbra.Api;
 using System.Threading;
 using System.Threading.Tasks;
+using SmartModSwitch.Interop;
 
-namespace SmartModSwitch.Windows;
+namespace SmartModSwitch.UI;
 
 public class NewAssignmentWindow : Window, IDisposable
 {

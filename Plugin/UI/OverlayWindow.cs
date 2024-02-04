@@ -4,7 +4,7 @@ using Dalamud.Interface.Internal;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
-namespace SmartModSwitch.Windows;
+namespace SmartModSwitch.UI;
 
 public class OverlayWindow : Window, IDisposable
 {
@@ -29,7 +29,7 @@ public class OverlayWindow : Window, IDisposable
 
     public override void Draw()
     {
-        ImGui.Text($"The random config bool is {smsw.Configuration.SomePropertyToBeSavedAndWithADefault}");
+        ImGui.Text($"The random config bool is {smsw.Config.SomePropertyToBeSavedAndWithADefault}");
 
         if (ImGui.Button("Show Settings"))
         {

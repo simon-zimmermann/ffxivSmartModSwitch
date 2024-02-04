@@ -2,33 +2,37 @@ using System;
 using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
+using SmartModSwitch.Data;
+using SmartModSwitch.UI.ImGuiExt;
 
-namespace SmartModSwitch.Windows;
+namespace SmartModSwitch.UI;
 
-public class ConfigWindow : Window, IDisposable {
+public class ConfigWindow : Window, IDisposable
+{
 	private readonly SmartModSwitch smsw;
-	private Configuration configuration;
+	private SelectListComponent<AssignmentGroup> assignmentGroups;
 
 	public ConfigWindow(SmartModSwitch smsw) : base(
-		"A Wonderful Configuration Window",
-		ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
-		ImGuiWindowFlags.NoScrollWithMouse) {
+		"ConfigWindow", ImGuiWindowFlags.NoCollapse)
+	{
 		this.smsw = smsw;
-		this.Size = new Vector2(232, 75);
-		this.SizeCondition = ImGuiCond.Always;
-
-		this.configuration = smsw.Configuration;
+		//this.Size = new Vector2(232, 75);
+		//this.SizeCondition = ImGuiCond.Always;
+		assignmentGroups = new SelectListComponent<AssignmentGroup>(smsw.Config.AssignmentGroups, () => new AssignmentGroup("asd"));
 	}
 
 	public void Dispose() { }
 
-	public override void Draw() {
+	public override void Draw()
+	{
+		assignmentGroups.Draw();
 		// can't ref a property, so use a local copy
-		var configValue = this.configuration.SomePropertyToBeSavedAndWithADefault;
-		if (ImGui.Checkbox("Random Config Bool", ref configValue)) {
-			this.configuration.SomePropertyToBeSavedAndWithADefault = configValue;
+		var configValue = smsw.Config.SomePropertyToBeSavedAndWithADefault;
+		if (ImGui.Checkbox("Random Config Bool", ref configValue))
+		{
+			smsw.Config.SomePropertyToBeSavedAndWithADefault = configValue;
 			// can save immediately on change, if you don't want to provide a "Save and Close" button
-			this.configuration.Save();
+			smsw.Config.Save();
 		}
 	}
 }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Penumbra.Api;
 using Penumbra.Api.Enums;
-namespace SmartModSwitch;
+
+namespace SmartModSwitch.Interop;
 
 
 public record PenumbraMod(string ModName, string FileSystemPath, string PenumbraPath);

@@ -3,14 +3,15 @@ using System.Numerics;
 using Dalamud.Interface.Internal;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
+using SmartModSwitch.Data;
 
-namespace SmartModSwitch.Windows;
+namespace SmartModSwitch.UI;
 
 public class MainWindow : Window, IDisposable
 {
 	private IDalamudTextureWrap GoatImage;
 	private readonly SmartModSwitch smsw;
-	private Configuration Configuration;
+	private Config Configuration;
 
 
 	public MainWindow(SmartModSwitch smsw, IDalamudTextureWrap goatImage) : base(
@@ -24,7 +25,7 @@ public class MainWindow : Window, IDisposable
 
 		this.GoatImage = goatImage;
 		this.smsw = smsw;
-		this.Configuration = smsw.Configuration;
+		this.Configuration = smsw.Config;
 
 	}
 
@@ -35,7 +36,7 @@ public class MainWindow : Window, IDisposable
 
 	public override void Draw()
 	{
-		ImGui.Text($"The random config bool is {smsw.Configuration.SomePropertyToBeSavedAndWithADefault}");
+		ImGui.Text($"The random config bool is {smsw.Config.SomePropertyToBeSavedAndWithADefault}");
 
 		if (ImGui.Button("Show Settings"))
 		{
@@ -61,8 +62,8 @@ public class MainWindow : Window, IDisposable
 
 		if (ImGui.Button("Open New Assignment Window"))
 		{
-			
-			smsw.UIManager.NewAssignmentWindow.Position = ImGui.GetWindowPos()+ImGui.GetCursorPos();
+
+			smsw.UIManager.NewAssignmentWindow.Position = ImGui.GetWindowPos() + ImGui.GetCursorPos();
 			smsw.UIManager.NewAssignmentWindow.Show();
 		}
 	}
