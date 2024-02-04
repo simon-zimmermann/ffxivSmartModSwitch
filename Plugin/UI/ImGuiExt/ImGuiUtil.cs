@@ -1,29 +1,46 @@
 using Dalamud.Interface;
 using ImGuiNET;
+using System;
 using System.Numerics;
 
 namespace SmartModSwitch.UI.ImGuiExt;
 public class ImGuiUtil {
-    public static float CalcButtonWidth(string text) {
-        return ImGui.CalcTextSize(text).X + ImGui.GetStyle().ItemInnerSpacing.X * 2 + ImGui.GetStyle().FramePadding.X * 2;
+    private static int uniqueIdCounter = 1000;
+    public static string GetUniqueIdSuffix() {
+        uniqueIdCounter++;
+        return "##" + uniqueIdCounter;
     }
-    public static bool IconButtonIconAdd() {
-        var label = FontAwesomeIcon.Plus.ToIconString();
+    public static Vector2 CalcButtonSize(string text) {
+        return ImGui.CalcTextSize(text) + ImGui.GetStyle().ItemInnerSpacing * 2 + ImGui.GetStyle().FramePadding * 2;
+    }
+    public static bool IconButton(FontAwesomeIcon icon, string label = "") {
+        var icoLabel = icon.ToIconString();
+        if (label != "") {
+            ImGui.AlignTextToFramePadding();
+            ImGui.Text(label);
+            ImGui.SameLine();
+
+        }
         ImGui.PushFont(UiBuilder.IconFont);
-        bool ret = ImGui.Button(label);
+        bool ret = ImGui.Button(icoLabel);
         ImGui.PopFont();
         return ret;
     }
-    public static float AddButtonSize() {
-        var label = FontAwesomeIcon.Plus.ToIconString();
+    public static Vector2 IconButtonSize(FontAwesomeIcon icon, string label = "") {
+        var icoLabel = icon.ToIconString();
         ImGui.PushFont(UiBuilder.IconFont);
-        float size = CalcButtonWidth(label);
+        Vector2 icoSize = CalcButtonSize(icoLabel);
         ImGui.PopFont();
-        return size;
+        Vector2 ret = icoSize;
+        if (label != "") {
+            ret.X += ImGui.CalcTextSize(label).X + ImGui.GetStyle().FramePadding.X * 2;
+        }
+        return ret;
     }
     public static bool IconButtonDelete() {
         bool ret = false;
         bool isEnabled = ImGui.IsKeyDown(ImGuiKey.ModCtrl);
+        string suffix = GetUniqueIdSuffix();
 
         ImGui.BeginDisabled(!isEnabled);
         if (isEnabled) {
@@ -31,7 +48,7 @@ public class ImGuiUtil {
             ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.6f, 0, 0, 1));
         }
         ImGui.PushFont(UiBuilder.IconFont);
-        if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString()))
+        if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString() + suffix))
             ret = true;
         ImGui.PopFont();
 
@@ -44,7 +61,8 @@ public class ImGuiUtil {
 
         return ret;
     }
-    public static float DeleteButtonSize() {
-        return CalcButtonWidth("del");
+    public static Vector2 DeleteButtonSize() {
+        return CalcButtonSize("del");
     }
+
 }

@@ -24,6 +24,9 @@ public class SelectListComponent<T> : IUiWidget where T : class {
 	/// If the user has accepted, return a new item, which will be added to the list
 	/// </summary>
 	public Func<T?> DrawCallPopup { private get; set; }
+	public T SelectedItem { get { return items[selectedIdx]; } }
+
+
 	public readonly string title;
 	private int selectedIdx = 0;
 	public SelectListComponent(List<T> items, string title) {
@@ -55,11 +58,11 @@ public class SelectListComponent<T> : IUiWidget where T : class {
 		ImGui.Text(title);
 
 		//buttons to the right of heading
-		var buttonwidth = ImGuiUtil.AddButtonSize() + ImGuiUtil.DeleteButtonSize();
+		var buttonwidth = ImGuiUtil.IconButtonSize(FontAwesomeIcon.Plus).X + ImGuiUtil.DeleteButtonSize().X;
 		ImGui.SameLine(ImGui.GetContentRegionAvail().X - buttonwidth);
 		ImGui.CalcItemWidth();
 
-		if (ImGuiUtil.IconButtonIconAdd()) {
+		if (ImGuiUtil.IconButton(FontAwesomeIcon.Plus)) {
 			ImGui.OpenPopup("input_popup");
 		}
 		ImGui.SameLine();
@@ -83,4 +86,5 @@ public class SelectListComponent<T> : IUiWidget where T : class {
 		ImGui.EndListBox();
 		ImGui.EndGroup();
 	}
+
 }
