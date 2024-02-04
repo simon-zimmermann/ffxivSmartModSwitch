@@ -6,40 +6,33 @@ using System.Linq;
 using Newtonsoft.Json;
 namespace SmartModSwitch;
 
-public sealed class CommandHandler : IDisposable
-{
+public sealed class CommandHandler : IDisposable {
     private readonly SmartModSwitch smsw;
 
     private const string CmdStringSMSW = "/smsw";
     private const string CmdStringDebug = "/smsw_debug";
 
-    public CommandHandler(SmartModSwitch smsw)
-    {
+    public CommandHandler(SmartModSwitch smsw) {
         this.smsw = smsw;
 
-        smsw.CommandManager.AddHandler(CmdStringSMSW, new CommandInfo(this.CommandHandlerSMSW)
-        {
+        smsw.CommandManager.AddHandler(CmdStringSMSW, new CommandInfo(this.CommandHandlerSMSW) {
             HelpMessage = "A useful message to display in /xlhelp"
         });
-        smsw.CommandManager.AddHandler(CmdStringDebug, new CommandInfo(this.CommandHandlerDebug)
-        {
+        smsw.CommandManager.AddHandler(CmdStringDebug, new CommandInfo(this.CommandHandlerDebug) {
             HelpMessage = "A useful message to display in /xlhelp"
         });
     }
 
-    public void Dispose()
-    {
+    public void Dispose() {
         smsw.CommandManager.RemoveHandler(CmdStringSMSW);
         smsw.CommandManager.RemoveHandler(CmdStringDebug);
     }
 
-    private void CommandHandlerSMSW(string command, string args)
-    {
+    private void CommandHandlerSMSW(string command, string args) {
         smsw.Logger.Info("CommandHandlerSMSW called");
         smsw.UIManager.MainWindow.IsOpen = !smsw.UIManager.MainWindow.IsOpen;
     }
-    private void CommandHandlerDebug(string command, string args)
-    {
+    private void CommandHandlerDebug(string command, string args) {
         //helpful: https://github.com/Ottermandias/Penumbra.Api/blob/main/IPenumbraApi.cs
         smsw.Logger.Info("CommandHandlerDebug called");
         var pGetColl = Ipc.GetCurrentCollectionName.Subscriber(smsw.PluginInterface);
@@ -48,15 +41,14 @@ public sealed class CommandHandler : IDisposable
 
         var modlist = smsw.PenumbraIPC.GetModList();
         smsw.Logger.Info("Modlist:");
-        foreach (var mod in modlist)
-        {
+        foreach (var mod in modlist) {
             smsw.Logger.Info("Mod: {0} {1}", mod.ModName, mod.PenumbraPath);
         }
 
         // var penumbraConfig = Ipc.GetConfiguration.Subscriber(smsw.PluginInterface).Invoke();
         // smsw.Logger.Info("Penumbra config: {0}", penumbraConfig);
 
- 
+
         // var success = Ipc.TrySetMod.Subscriber(smsw.PluginInterface).Invoke("Zfox Serious Base", "dances/memes/[OCN] Drop the bass","[OCN] Drop the bass",false);
         // smsw.Logger.Info("TrySetMod success: {0}", success);
 

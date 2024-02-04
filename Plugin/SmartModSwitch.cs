@@ -8,8 +8,7 @@ using SmartModSwitch.Interop;
 
 namespace SmartModSwitch;
 
-public sealed class SmartModSwitch : IDalamudPlugin
-{
+public sealed class SmartModSwitch : IDalamudPlugin {
 	public readonly static string Name = "SmartModSwitch";
 
 	// injected services
@@ -31,8 +30,7 @@ public sealed class SmartModSwitch : IDalamudPlugin
 		[RequiredVersion("1.0")] ICommandManager _commandManager,
 		[RequiredVersion("1.0")] IPluginLog _pluginLog,
 		[RequiredVersion("1.0")] IDataManager _dataManager,
-		[RequiredVersion("1.0")] IGameInteropProvider _gameInteropProvider)
-	{
+		[RequiredVersion("1.0")] IGameInteropProvider _gameInteropProvider) {
 		// init injected services
 		PluginInterface = _pluginInterface;
 		CommandManager = _commandManager;
@@ -50,14 +48,13 @@ public sealed class SmartModSwitch : IDalamudPlugin
 		UIManager = new UIManager(this);
 		PenumbraIPC = new PenumbraIPC(this);
 		ChatHelper = new ChatHelper(this);
-		
-		
+
+
 		ChatHelper.SendSanitizedChatMessage("/echo wat");
 
 	}
 
-	public void Dispose()
-	{
+	public void Dispose() {
 		Config.Save();
 		UIManager.Dispose();
 		CommandHandler.Dispose();

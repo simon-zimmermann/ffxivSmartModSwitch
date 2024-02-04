@@ -7,18 +7,15 @@ using SmartModSwitch.Data;
 
 namespace SmartModSwitch.UI;
 
-public class MainWindow : Window, IDisposable
-{
+public class MainWindow : Window, IDisposable {
 	private IDalamudTextureWrap GoatImage;
 	private readonly SmartModSwitch smsw;
 	private Config Configuration;
 
 
 	public MainWindow(SmartModSwitch smsw, IDalamudTextureWrap goatImage) : base(
-		"My Amazing Window", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
-	{
-		this.SizeConstraints = new WindowSizeConstraints
-		{
+		"My Amazing Window", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse) {
+		this.SizeConstraints = new WindowSizeConstraints {
 			MinimumSize = new Vector2(375, 330),
 			MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
 		};
@@ -29,17 +26,14 @@ public class MainWindow : Window, IDisposable
 
 	}
 
-	public void Dispose()
-	{
+	public void Dispose() {
 		this.GoatImage.Dispose();
 	}
 
-	public override void Draw()
-	{
+	public override void Draw() {
 		ImGui.Text($"The random config bool is {smsw.Config.SomePropertyToBeSavedAndWithADefault}");
 
-		if (ImGui.Button("Show Settings"))
-		{
+		if (ImGui.Button("Show Settings")) {
 			smsw.UIManager.DrawConfigUI();
 		}
 
@@ -51,8 +45,7 @@ public class MainWindow : Window, IDisposable
 		ImGui.Unindent(55);
 
 		var val = this.Configuration.OverlayActive;
-		if (ImGui.Checkbox("Random Config Bool", ref val))
-		{
+		if (ImGui.Checkbox("Random Config Bool", ref val)) {
 			this.Configuration.OverlayActive = val;
 			// can save immediately on change, if you don't want to provide a "Save and Close" button
 			this.Configuration.Save();
@@ -60,8 +53,7 @@ public class MainWindow : Window, IDisposable
 			smsw.UIManager.OverlayWindow.IsOpen = val;
 		}
 
-		if (ImGui.Button("Open New Assignment Window"))
-		{
+		if (ImGui.Button("Open New Assignment Window")) {
 
 			smsw.UIManager.NewAssignmentWindow.Position = ImGui.GetWindowPos() + ImGui.GetCursorPos();
 			smsw.UIManager.NewAssignmentWindow.Show();

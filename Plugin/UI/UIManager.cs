@@ -5,16 +5,14 @@ using System.IO;
 
 namespace SmartModSwitch.UI;
 
-public sealed class UIManager : IDisposable
-{
+public sealed class UIManager : IDisposable {
 	private readonly SmartModSwitch smsw;
 	public WindowSystem WindowSystem = new(SmartModSwitch.Name);
 	public ConfigWindow ConfigWindow { get; init; }
 	public MainWindow MainWindow { get; init; }
 	public OverlayWindow OverlayWindow { get; init; }
 	public NewAssignmentWindow NewAssignmentWindow { get; init; }
-	public UIManager(SmartModSwitch smsw)
-	{
+	public UIManager(SmartModSwitch smsw) {
 		this.smsw = smsw;
 
 		// you might normally want to embed resources and load them from the manifest stream
@@ -33,23 +31,20 @@ public sealed class UIManager : IDisposable
 
 		smsw.PluginInterface.UiBuilder.Draw += DrawUI;
 		smsw.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
-		
+
 		//debug
 		MainWindow.IsOpen = true;
-		
+
 	}
 
-	private void DrawUI()
-	{
+	private void DrawUI() {
 		this.WindowSystem.Draw();
 	}
 
-	public void DrawConfigUI()
-	{
+	public void DrawConfigUI() {
 		ConfigWindow.IsOpen = true;
 	}
-	public void Dispose()
-	{
+	public void Dispose() {
 		WindowSystem.RemoveAllWindows();
 		ConfigWindow.Dispose();
 		MainWindow.Dispose();
