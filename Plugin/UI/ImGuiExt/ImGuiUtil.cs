@@ -1,6 +1,7 @@
 using Dalamud.Interface;
 using ImGuiNET;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace SmartModSwitch.UI.ImGuiExt;
@@ -64,5 +65,89 @@ public class ImGuiUtil {
     public static Vector2 DeleteButtonSize() {
         return CalcButtonSize("del");
     }
+    public static bool Combo(string label, ref int current, string[] items) {
+        return ImGui.Combo(label, ref current, items, items.Length);
+    }
+    public static void DrawDropdownBox(ref string input, ref int selectedListIndex) {
+        List<string> filteredItems = new List<string>();
+        string[] listNames = {
+            "TYPES OF EMOTES!!!",
+            "Explicit",
+            "Implicit",
+            "Fractured",
+            "Enchant",
+            "Scourge",
+            "Crafted",
+            "Crucible",
+            "Veiled",
+            "Monster",
+            "Delve",
+            "Ultimatum",
+        };
+        string[] leftItems = {
+            "ADD SOME TEST ITEMS1",
+            "ADD SOME TEST ITEMS2",
+            "ADD SOME TEST ITEMS3",
+            "ADD SOME TEST ITEMS4",
+            "ADD SOME TEST ITEMS5",
+            "ADD SOME TEST ITEMS6",
+        };
 
+
+        bool isInputTextEnterPressed = ImGui.InputText("##input", ref input, 32, ImGuiInputTextFlags.EnterReturnsTrue);
+        var min = ImGui.GetItemRectMin();
+        var size = ImGui.GetItemRectSize();
+        bool isInputTextActivated = ImGui.IsItemActivated();
+
+        if (isInputTextActivated) {
+            ImGui.SetNextWindowPos(new Vector2(min.X, min.Y));
+            ImGui.OpenPopup("##popup");
+        }
+
+        if (ImGui.BeginPopup("##popup", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoSavedSettings)) {
+            if (isInputTextActivated)
+                ImGui.SetKeyboardFocusHere(0);
+            ImGui.InputText("##input_popup", ref input, 32);
+            ImGui.SameLine();
+            ImGui.Combo("##listCombo", ref selectedListIndex, listNames, listNames.Length);
+            filteredItems.Clear();
+            // Select items based on the selected list index
+            string[] selectedItems = leftItems;//GetSelectedListItems(selectedListIndex);
+
+            if (string.IsNullOrEmpty(input))
+                foreach (string item in selectedItems)
+                    filteredItems.Add(item);
+            else {
+                var parts = input.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+                foreach (string str in selectedItems) {
+                    bool allPartsMatch = true;
+                    foreach (string part in parts) {
+                        if (!str.Contains(part, StringComparison.OrdinalIgnoreCase)) {
+                            allPartsMatch = false;
+                            break;
+                        }
+                    }
+                    if (allPartsMatch)
+                        filteredItems.Add(str);
+                }
+            }
+            ImGui.BeginChild("scrolling_region", new Vector2(size.X * 2, size.Y * 10), false, ImGuiWindowFlags.HorizontalScrollbar);
+            foreach (string item in filteredItems) {
+                if (ImGui.Selectable(item)) {
+                    //App.Log("Selected popup");
+                    input = item;
+                    ImGui.CloseCurrentPopup();
+                    break;
+                }
+            }
+            ImGui.EndChild();
+
+            //if (isInputTextEnterPressed || ImGui.IsKeyPressed(ImGui.GetKeyIndex(ImGuiKey.Escape))) {
+            //    // App.Log("Closing popup");
+            //    ImGui.CloseCurrentPopup();
+            //}
+
+            ImGui.EndPopup();
+        }
+    }
 }

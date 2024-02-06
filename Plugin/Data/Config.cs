@@ -12,7 +12,7 @@ namespace SmartModSwitch.Data {
 
         public bool OverlayActive { get; set; } = false;
 
-        public List<AssignmentGroup> AssignmentGroups { get; } = new List<AssignmentGroup>();
+        public List<Asg> AssignmentGroups { get; } = new List<Asg>();
 
         // boilerplate code to save config
         [NonSerialized]

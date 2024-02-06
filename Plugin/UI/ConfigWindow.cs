@@ -6,25 +6,36 @@ using ImGuiNET;
 using SmartModSwitch.Data;
 using SmartModSwitch.UI.ImGuiExt;
 using Dalamud.Interface;
+using System.Linq;
+using Lumina.Excel.GeneratedSheets;
 
 namespace SmartModSwitch.UI;
 
 public class ConfigWindow : Window, IDisposable {
 	private readonly SmartModSwitch smsw;
-	private readonly SelectListComponent<AssignmentGroup> assignmentGroups;
+	private readonly SelectListComponent<Asg> assignmentGroups;
 	private readonly SelectListComponent<string> activeMods;
 	private readonly List<string> tempActiveModsList = ["temp mod 1", "temp mod 2"];
+	private readonly List<Emote> availableEmotes = [];
 
 	public ConfigWindow(SmartModSwitch smsw) : base(
 		"SmartModSwitch Config", ImGuiWindowFlags.NoCollapse) {
 		this.smsw = smsw;
-		this.SizeConstraints = new WindowSizeConstraints {
+		SizeConstraints = new WindowSizeConstraints {
 			MinimumSize = new Vector2(800, 600),
 			MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
 		};
 
+		var emoteSheet = smsw.DataManager.GetExcelSheet<Emote>();
+		if (emoteSheet != null)
+			foreach (var item in emoteSheet)
+				if (item.Name != null && item.Name != "")
+					availableEmotes.Add(item);
+
+
+
 		string popup_value = "";
-		assignmentGroups = new SelectListComponent<AssignmentGroup>(smsw.Config.AssignmentGroups, "Assignment Groups") {
+		assignmentGroups = new SelectListComponent<Asg>(smsw.Config.AssignmentGroups, "Assignment Groups") {
 			OnItemClick = (entry, index) => {
 				smsw.Logger.Info($"Selected Assignment group: {entry}");
 			},
@@ -32,7 +43,7 @@ public class ConfigWindow : Window, IDisposable {
 				ImGui.InputText("Assignment group name", ref popup_value, 100);
 				if (ImGui.Button("OK")) {
 					ImGui.CloseCurrentPopup();
-					var obj = new AssignmentGroup(popup_value);
+					var obj = new Asg(popup_value);
 					popup_value = "";
 					return obj;
 				}
@@ -64,12 +75,52 @@ public class ConfigWindow : Window, IDisposable {
 
 	public void Dispose() { }
 
-	private void DrawAssignmentGoupSettings(AssignmentGroup currentGroup) {
+	private void DrawAssgSettings(Asg currentGroup) {
 		ImGui.Text("Assignment Group Settings");
 		bool enabled = currentGroup.Enabled;
 		if (ImGui.Checkbox("Enabled", ref enabled))
 			currentGroup.Enabled = enabled;
-
+		int selectedType = (int)currentGroup.Type;
+		if (ImGuiUtil.Combo("Type", ref selectedType, Strings.UIAsgTypeStr)) {
+			currentGroup.Type = (AsgType)selectedType;
+		}
+		switch (currentGroup.Type) {
+			case AsgType.EMOTE:
+				ImGui.Indent();
+				string input = "";
+				int idx=0;
+				ImGuiUtil.DrawDropdownBox(ref input, ref idx);
+				//ImGui.BeginListBox("Select Emote", new Vector2(-1, -1));
+				//for (int n = 0; n < availableEmotes.Count; n++) {
+				//	bool isSelected = currentGroup.EmoteIdx == n;
+				//	if (ImGui.Selectable(availableEmotes[n].Name, isSelected)) {
+				//		currentGroup.EmoteIdx = n;
+				//	}
+				//}
+				//ImGui.EndListBox();
+				ImGui.Unindent();
+				break;
+			case AsgType.COMMAND:
+				ImGui.Indent();
+				//string enteredCommand = currentGroup.Command;
+				//if (ImGui.InputText("Command", ref enteredCommand, 100)) {
+				//	currentGroup.Command = enteredCommand;
+				//}
+				ImGui.Unindent();
+				break;
+		}
+		int selectedReset = (int)currentGroup.Reset;
+		if (ImGuiUtil.Combo("Reset Condition", ref selectedReset, Strings.UIAsgResetStr)) {
+			currentGroup.Reset = (AsgReset)selectedReset;
+		}
+		if (currentGroup.Reset == AsgReset.TIMER) {
+			ImGui.Indent();
+			float enteredResetTime = currentGroup.ResetTime;
+			if (ImGui.InputFloat("Reset Time [s]", ref enteredResetTime)) {
+				currentGroup.ResetTime = enteredResetTime;
+			}
+			ImGui.Unindent();
+		}
 	}
 
 	public override void Draw() {
@@ -87,7 +138,7 @@ public class ConfigWindow : Window, IDisposable {
 			ImGui.BeginChild("left", new Vector2(ImGui.GetContentRegionAvail().X * 0.5f, -1));
 			assignmentGroups.Draw();
 			ImGui.Separator();
-			DrawAssignmentGoupSettings(assignmentGroups.SelectedItem);
+			DrawAssgSettings(assignmentGroups.SelectedItem);
 			ImGui.EndChild();
 		}
 		ImGui.SameLine();
