@@ -15,8 +15,9 @@ public class ConfigWindow : Window, IDisposable {
 	private readonly SmartModSwitch smsw;
 	private readonly SelectListComponent<Asg> assignmentGroups;
 	private readonly SelectListComponent<string> activeMods;
+	private readonly EmoteSearchBox emoteSelection;
 	private readonly List<string> tempActiveModsList = ["temp mod 1", "temp mod 2"];
-	private readonly List<Emote> availableEmotes = [];
+	//private string tmp_input = "";
 
 	public ConfigWindow(SmartModSwitch smsw) : base(
 		"SmartModSwitch Config", ImGuiWindowFlags.NoCollapse) {
@@ -26,14 +27,7 @@ public class ConfigWindow : Window, IDisposable {
 			MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
 		};
 
-		var emoteSheet = smsw.DataManager.GetExcelSheet<Emote>();
-		if (emoteSheet != null)
-			foreach (var item in emoteSheet)
-				if (item.Name != null && item.Name != "")
-					availableEmotes.Add(item);
-
-
-
+		// UI
 		string popup_value = "";
 		assignmentGroups = new SelectListComponent<Asg>(smsw.Config.AssignmentGroups, "Assignment Groups") {
 			OnItemClick = (entry, index) => {
@@ -71,6 +65,7 @@ public class ConfigWindow : Window, IDisposable {
 				return ImGui.Selectable($"{entry}##{index}", isSelected);
 			}
 		};
+		emoteSelection = new EmoteSearchBox(smsw.GameData);
 	}
 
 	public void Dispose() { }
@@ -87,9 +82,25 @@ public class ConfigWindow : Window, IDisposable {
 		switch (currentGroup.Type) {
 			case AsgType.EMOTE:
 				ImGui.Indent();
-				string input = "";
-				int idx=0;
-				ImGuiUtil.DrawDropdownBox(ref input, ref idx);
+				int idx = currentGroup.EmoteIdx;
+				//string input = "";//smsw.GameData.emoteNames[idx];
+				int category = 0;
+				//TODO copy from https://github.com/BanditTech/Triggered/blob/4a19bd56fece77f30cd8b2be35965ad12091fb76/DropdownBoxUtility.cs
+				//if (ImGuiUtil.DrawDropdownBox(ref tmp_input, ref category, ref idx, smsw.GameData.emoteNames, smsw.GameData.emoteCategoryNames)) {
+				//	currentGroup.EmoteIdx = idx;
+				//	tmp_input = smsw.GameData.emoteNames[idx];
+				//	smsw.Logger.Info($"Selected Emote: {tmp_input}");
+				//	smsw.Logger.Info($"Selected Emote Category: {smsw.GameData.emoteCategoryNames[category]}");
+				//	smsw.Logger.Info($"Selected Emote Index: {idx}");
+//
+				//}
+				if (emoteSelection.Draw(ref idx)) {
+					currentGroup.EmoteIdx = idx;
+					//tmp_input = smsw.GameData.emoteNames[idx];
+					smsw.Logger.Info($"Selected Emote: {smsw.GameData.emoteNames[idx]}");
+					smsw.Logger.Info($"Selected Emote Category: {smsw.GameData.emoteCategoryNames[category]}");
+					smsw.Logger.Info($"Selected Emote Index: {idx}");
+				}
 				//ImGui.BeginListBox("Select Emote", new Vector2(-1, -1));
 				//for (int n = 0; n < availableEmotes.Count; n++) {
 				//	bool isSelected = currentGroup.EmoteIdx == n;

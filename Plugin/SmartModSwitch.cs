@@ -24,6 +24,7 @@ public sealed class SmartModSwitch : IDalamudPlugin {
 	public UIManager UIManager { get; init; }
 	public PenumbraIPC PenumbraIPC { get; init; }
 	public ChatHelper ChatHelper { get; init; }
+	public GameData GameData { get; init; }
 
 	public SmartModSwitch(
 		[RequiredVersion("1.0")] DalamudPluginInterface _pluginInterface,
@@ -45,9 +46,10 @@ public sealed class SmartModSwitch : IDalamudPlugin {
 		Config.Initialize(this);
 
 		CommandHandler = new CommandHandler(this);
-		UIManager = new UIManager(this);
 		PenumbraIPC = new PenumbraIPC(this);
 		ChatHelper = new ChatHelper(this);
+		GameData = new GameData(this);
+		UIManager = new UIManager(this);
 
 
 		//ChatHelper.SendSanitizedChatMessage("/echo wat");
@@ -59,6 +61,8 @@ public sealed class SmartModSwitch : IDalamudPlugin {
 		UIManager.Dispose();
 		CommandHandler.Dispose();
 		PenumbraIPC.Dispose();
+		ChatHelper.Dispose();
+		GameData.Dispose();
 	}
 
 }

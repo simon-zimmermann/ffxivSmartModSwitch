@@ -10,7 +10,7 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 
 namespace SmartModSwitch;
 
-public unsafe class ChatHelper {
+public unsafe class ChatHelper : IDisposable{
     // Code heavily borrowed from ascclemens' XivCommon
     // https://git.anna.lgbt/ascclemens/XivCommon/src/branch/main/XivCommon/Functions/Chat.cs
 
@@ -79,4 +79,7 @@ public unsafe class ChatHelper {
 
         this._processChatBoxEntry(Framework.Instance()->GetUiModule(), utfMessage, nint.Zero, 0);
     }
+
+	public void Dispose() {
+	}
 }

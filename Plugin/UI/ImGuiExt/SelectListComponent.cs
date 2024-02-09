@@ -6,7 +6,7 @@ using Dalamud.Interface;
 
 namespace SmartModSwitch.UI.ImGuiExt;
 
-public class SelectListComponent<T> : IUiWidget where T : class {
+public class SelectListComponent<T>  where T : class {
 	private readonly List<T> items;
 	/// <summary>
 	/// Called when an item is clicked
