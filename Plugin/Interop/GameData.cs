@@ -25,6 +25,7 @@ public class GameData : IDisposable {
                     emoteCategories.Add(item);
                     emoteCategoryNames.Add(item.Name);
                 }
+
     }
 
     public void Dispose() {
