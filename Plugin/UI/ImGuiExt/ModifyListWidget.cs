@@ -51,9 +51,13 @@ public class ModifyListWidget<T> where T : class {
 		}
 		ImGui.SameLine();
 		if (ImGuiUtil.IconButtonDelete()) {
-			items.RemoveAt(selectedIdx);
-			selectedIdx -= 1;
-			OnItemClick(items[selectedIdx], selectedIdx);
+			if (selectedIdx >= 0 && selectedIdx < items.Count) {
+				items.RemoveAt(selectedIdx);
+				if (items.Count > 0) {
+					selectedIdx = Math.Max(0, selectedIdx - 1);
+					OnItemClick(items[selectedIdx], selectedIdx);
+				}
+			}
 		}
 
 		//main list
