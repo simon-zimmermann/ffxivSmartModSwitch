@@ -12,7 +12,6 @@ public sealed class UIManager : IDisposable {
 	public Config.WindowMain ConfigWindow { get; init; }
 	public MainWindow MainWindow { get; init; }
 	public OverlayWindow OverlayWindow { get; init; }
-	public NewAssignmentWindow NewAssignmentWindow { get; init; }
 	public UIManager() {
 		// you might normally want to embed resources and load them from the manifest stream
 		var imagePath = Path.Combine(SMSW.PluginInterface.AssemblyLocation.Directory?.FullName!, "Assets", "goat.png");
@@ -21,18 +20,16 @@ public sealed class UIManager : IDisposable {
 		ConfigWindow = new Config.WindowMain();
 		MainWindow = new MainWindow(goatImage);
 		OverlayWindow = new OverlayWindow();
-		NewAssignmentWindow = new NewAssignmentWindow();
 
 		WindowSystem.AddWindow(ConfigWindow);
 		WindowSystem.AddWindow(MainWindow);
 		WindowSystem.AddWindow(OverlayWindow);
-		WindowSystem.AddWindow(NewAssignmentWindow);
 
 		SMSW.PluginInterface.UiBuilder.Draw += DrawUI;
 		SMSW.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
 
 		//debug
-		MainWindow.IsOpen = true;
+		ConfigWindow.IsOpen = true;
 
 	}
 
@@ -48,7 +45,6 @@ public sealed class UIManager : IDisposable {
 		ConfigWindow.Dispose();
 		MainWindow.Dispose();
 		OverlayWindow.Dispose();
-		NewAssignmentWindow.Dispose();
 	}
 
 }

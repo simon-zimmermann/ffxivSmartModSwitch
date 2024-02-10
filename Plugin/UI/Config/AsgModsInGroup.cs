@@ -45,15 +45,14 @@ public class AsgModsInGroup {
         //Bottom: mod settings
         var selectedItem = activeModsList.SelectedItem;
         if (selectedItem != null) {
+            var command = selectedItem.Command;
+            if(ImGui.InputText("Command", ref command, 100))
+                selectedItem.Command = command;
+                
             if (ImGui.Button("Test")) {
                 SMSW.Logger.Info("Test button pressed");
-                var notSelected = group.Mods.Where(x => x != selectedItem).ToList();
-                SMSW.Logger.Info("Activating: {0}", selectedItem.Mod.ModName);
-                foreach (var mod in notSelected) {
-                    SMSW.Logger.Info("Deactivating: {0}", mod.Mod.ModName);
-                }
-                var emote = SMSW.GameData.emotes[group.EmoteIdx];
-                SMSW.Logger.Info("Executing emote: {0}", emote.TextCommand.Value?.Command ?? "NO");
+                var executor = new AsgModExecutor(group, selectedItem);
+                executor.Execute();
             }
         }
 

@@ -15,9 +15,9 @@ namespace SmartModSwitch.UI.Config;
 public class WindowMain : Window, IDisposable {
 	private readonly ModifyListWidget<Asg> assignmentGroups;
 
-	private AsgGroupList asgSettings;
+	private AsgSettings asgSettings;
 	private AsgModsInGroup? asgActiveModList;
-	private Asg newGroup = new Asg();
+	private AsgAddGroupPopup asgAddGroupPopup;
 
 	public WindowMain() : base(
 		"SmartModSwitch Config", ImGuiWindowFlags.NoCollapse) {
@@ -27,14 +27,15 @@ public class WindowMain : Window, IDisposable {
 		};
 
 		// UI
-		string popup_value = "";
+		asgAddGroupPopup = new AsgAddGroupPopup();
 		assignmentGroups = new ModifyListWidget<Asg>(SMSW.Config.AssignmentGroups, "Assignment Groups") {
 			OnItemClick = (entry, index) => {
 				AssignmentGroupSelected(entry);
 			},
-			DrawCallAddItem = DrawAddItem
+			DrawCallAddItem = asgAddGroupPopup.Draw
 		};
-		asgSettings = new AsgGroupList();
+		asgSettings = new AsgSettings();
+
 
 		AssignmentGroupSelected(assignmentGroups.SelectedItem);
 	}
@@ -46,23 +47,6 @@ public class WindowMain : Window, IDisposable {
 	}
 	public void Dispose() { }
 
-	private Asg? DrawAddItem(bool firstOpen) {
-		if (firstOpen)
-			ImGui.SetKeyboardFocusHere(0);
-		//ImGui.InputText("Assignment group name", ref popup_value, 100);
-
-		int selectedType = (int)newGroup.Type;
-		if (ImGuiUtil.Combo("Type", ref selectedType, Strings.UIAsgTypeStr)) {
-			newGroup.Type = (AsgType)selectedType;
-		}
-		if (ImGui.Button("OK")) {
-			ImGui.CloseCurrentPopup();
-			//var obj = new Asg(popup_value);
-			//popup_value = "";
-			return newGroup;
-		}
-		return null;
-	}
 
 	public override void Draw() {
 		{

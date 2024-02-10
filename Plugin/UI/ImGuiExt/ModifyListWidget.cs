@@ -52,6 +52,8 @@ public class ModifyListWidget<T> where T : class {
 		ImGui.SameLine();
 		if (ImGuiUtil.IconButtonDelete()) {
 			items.RemoveAt(selectedIdx);
+			selectedIdx -= 1;
+			OnItemClick(items[selectedIdx], selectedIdx);
 		}
 
 		//main list

@@ -22,17 +22,18 @@ public class Asg {
 	public Asg() {
 	}
 	public override string ToString() {
-		return Strings.UIAsgType[Type] + ": TODO EMOTE NAME";
+		return Strings.UIAsgType[Type] + ": " + SMSW.GameData.emotes[EmoteIdx].Name;
 	}
 }
 public class AsgModsEntry {
-	public PenumbraMod Mod { get; set; }
+	public PenumbraMod PenumbraMod { get; set; }
 	public bool Enabled { get; set; } = false;
+	public string Command { get; set; } = "";
 	public AsgModsEntry(PenumbraMod mod) {
-		Mod = mod;
+		PenumbraMod = mod;
 	}
 	public override string ToString() {
-		return Mod.ModName;
+		return PenumbraMod.ModName;
 	}
 }
 

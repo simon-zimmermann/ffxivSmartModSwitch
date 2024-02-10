@@ -49,10 +49,5 @@ public class MainWindow : Window, IDisposable {
 			SMSW.UIManager.OverlayWindow.IsOpen = val;
 		}
 
-		if (ImGui.Button("Open New Assignment Window")) {
-
-			SMSW.UIManager.NewAssignmentWindow.Position = ImGui.GetWindowPos() + ImGui.GetCursorPos();
-			SMSW.UIManager.NewAssignmentWindow.Show();
-		}
 	}
 }

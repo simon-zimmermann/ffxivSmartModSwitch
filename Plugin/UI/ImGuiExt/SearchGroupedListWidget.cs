@@ -133,5 +133,8 @@ public class SearchGroupedListWidget<T1, T2> where T1 : class where T2 : class {
         }
         return ret;
     }
-
+    public void Reset() {
+        searchText = "";
+        selectedCategoryIdx = 0;
+    }
 }
