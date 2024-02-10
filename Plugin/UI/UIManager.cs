@@ -2,37 +2,34 @@ using System;
 using SmartModSwitch.UI;
 using Dalamud.Interface.Windowing;
 using System.IO;
-using SmartModSwitch.UI.ConfigWindow;
+using SmartModSwitch.Data;
 
 namespace SmartModSwitch.UI;
 
 
 public sealed class UIManager : IDisposable {
-	private readonly SmartModSwitch smsw;
-	public WindowSystem WindowSystem = new(SmartModSwitch.Name);
-	public ConfigWindowMain ConfigWindow { get; init; }
+	public WindowSystem WindowSystem = new(SMSW.Name);
+	public Config.WindowMain ConfigWindow { get; init; }
 	public MainWindow MainWindow { get; init; }
 	public OverlayWindow OverlayWindow { get; init; }
 	public NewAssignmentWindow NewAssignmentWindow { get; init; }
-	public UIManager(SmartModSwitch smsw) {
-		this.smsw = smsw;
-
+	public UIManager() {
 		// you might normally want to embed resources and load them from the manifest stream
-		var imagePath = Path.Combine(smsw.PluginInterface.AssemblyLocation.Directory?.FullName!, "Assets", "goat.png");
-		var goatImage = smsw.PluginInterface.UiBuilder.LoadImage(imagePath);
+		var imagePath = Path.Combine(SMSW.PluginInterface.AssemblyLocation.Directory?.FullName!, "Assets", "goat.png");
+		var goatImage = SMSW.PluginInterface.UiBuilder.LoadImage(imagePath);
 
-		ConfigWindow = new ConfigWindowMain(smsw);
-		MainWindow = new MainWindow(smsw, goatImage);
-		OverlayWindow = new OverlayWindow(smsw);
-		NewAssignmentWindow = new NewAssignmentWindow(smsw);
+		ConfigWindow = new Config.WindowMain();
+		MainWindow = new MainWindow(goatImage);
+		OverlayWindow = new OverlayWindow();
+		NewAssignmentWindow = new NewAssignmentWindow();
 
 		WindowSystem.AddWindow(ConfigWindow);
 		WindowSystem.AddWindow(MainWindow);
 		WindowSystem.AddWindow(OverlayWindow);
 		WindowSystem.AddWindow(NewAssignmentWindow);
 
-		smsw.PluginInterface.UiBuilder.Draw += DrawUI;
-		smsw.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
+		SMSW.PluginInterface.UiBuilder.Draw += DrawUI;
+		SMSW.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
 
 		//debug
 		MainWindow.IsOpen = true;

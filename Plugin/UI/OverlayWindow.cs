@@ -7,9 +7,8 @@ using ImGuiNET;
 namespace SmartModSwitch.UI;
 
 public class OverlayWindow : Window, IDisposable {
-    private readonly SmartModSwitch smsw;
 
-    public OverlayWindow(SmartModSwitch smsw) : base(
+    public OverlayWindow() : base(
         "OverlayWindow", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoTitleBar) {
         this.SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(375, 330),
@@ -17,17 +16,16 @@ public class OverlayWindow : Window, IDisposable {
         };
         this.BgAlpha = 0.5f;
         this.Flags |= ImGuiWindowFlags.NoMove;
-        this.smsw = smsw;
     }
 
     public void Dispose() {
     }
 
     public override void Draw() {
-        ImGui.Text($"The random config bool is {smsw.Config.SomePropertyToBeSavedAndWithADefault}");
+        ImGui.Text($"The random config bool is {SMSW.Config.SomePropertyToBeSavedAndWithADefault}");
 
         if (ImGui.Button("Show Settings")) {
-            smsw.UIManager.DrawConfigUI();
+            SMSW.UIManager.DrawConfigUI();
         }
 
         ImGui.Spacing();

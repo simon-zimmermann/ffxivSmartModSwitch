@@ -21,8 +21,8 @@ public unsafe class ChatHelper : IDisposable{
         internal const string SanitizeChatString = "E8 ?? ?? ?? ?? EB 0A 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8D";
     }
 
-    public ChatHelper(SmartModSwitch smsw) {
-        smsw.GameInteropProvider.InitializeFromAttributes(this);
+    public ChatHelper() {
+        SMSW.GameInteropProvider.InitializeFromAttributes(this);
     }
 
     [Signature(Signatures.SanitizeChatString, Fallibility = Fallibility.Fallible)]

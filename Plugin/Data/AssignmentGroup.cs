@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SmartModSwitch.Interop;
+using SmartModSwitch.UI;
 
 namespace SmartModSwitch.Data;
 
@@ -10,7 +11,7 @@ namespace SmartModSwitch.Data;
 /// </summary>
 [Serializable]
 public class Asg {
-	public string Name { get; set; }
+	//public string Name { get; set; }
 	public bool Enabled { get; set; } = false;
 	public AsgType Type { get; set; } = AsgType.NOTHING;
 	public int EmoteIdx { get; set; } = 0;
@@ -18,11 +19,10 @@ public class Asg {
 	public float ResetTime { get; set; } = 0.0f;
 	public List<AsgModsEntry> Mods { get; } = [];
 
-	public Asg(string name) {
-		Name = name;
+	public Asg() {
 	}
 	public override string ToString() {
-		return Name;
+		return Strings.UIAsgType[Type] + ": TODO EMOTE NAME";
 	}
 }
 public class AsgModsEntry {

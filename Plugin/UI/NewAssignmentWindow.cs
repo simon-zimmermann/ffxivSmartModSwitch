@@ -14,13 +14,12 @@ using SmartModSwitch.Interop;
 namespace SmartModSwitch.UI;
 
 public class NewAssignmentWindow : Window, IDisposable {
-    private readonly SmartModSwitch smsw;
     private List<PenumbraMod> modList = new List<PenumbraMod>();
     private List<Emote> emoteList = new List<Emote>();
     private int selectedModIdx = 0;
     private int selectedEmoteIdx = 0;
 
-    public NewAssignmentWindow(SmartModSwitch smsw) : base(
+    public NewAssignmentWindow() : base(
         "NewAssignmentWindow", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoTitleBar) {
         //this.SizeConstraints = new WindowSizeConstraints
         //{
@@ -28,7 +27,6 @@ public class NewAssignmentWindow : Window, IDisposable {
         //    MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         //};
 
-        this.smsw = smsw;
 
 
     }
@@ -38,9 +36,9 @@ public class NewAssignmentWindow : Window, IDisposable {
 
     public void Show() {
         IsOpen = true;
-        modList = smsw.PenumbraIPC.GetModList();
+        modList = SMSW.PenumbraIPC.GetModList();
 
-        var emoteSheet = smsw.DataManager.GetExcelSheet<Emote>();
+        var emoteSheet = SMSW.DataManager.GetExcelSheet<Emote>();
         if (emoteSheet == null) return;
         foreach (var item in emoteSheet) {
             //var emote = new EmoteRow(item);
@@ -54,15 +52,15 @@ public class NewAssignmentWindow : Window, IDisposable {
     private async Task asyncTask() {
         //var sw = new Stopwatch();
         //sw.Start();
-        smsw.Logger.Info("async: Starting");
+        SMSW.Logger.Info("async: Starting");
         Task delay = Task.Delay(2000);
         //Console.WriteLine("async: Running for {0} seconds", sw.Elapsed.TotalSeconds);
         await delay;
         //Console.WriteLine("async: Running for {0} seconds", sw.Elapsed.TotalSeconds);
-        smsw.Logger.Info("async: Done");
+        SMSW.Logger.Info("async: Done");
 
-        var success = Ipc.TrySetMod.Subscriber(smsw.PluginInterface).Invoke("Zfox Serious Base", modList[selectedModIdx].PenumbraPath, modList[selectedModIdx].ModName, false);
-        smsw.Logger.Info("TrySetMod success: {0}", success);
+        var success = Ipc.TrySetMod.Subscriber(SMSW.PluginInterface).Invoke("Zfox Serious Base", modList[selectedModIdx].PenumbraPath, modList[selectedModIdx].ModName, false);
+        SMSW.Logger.Info("TrySetMod success: {0}", success);
     }
     public override void Draw() {
         {
@@ -108,10 +106,10 @@ public class NewAssignmentWindow : Window, IDisposable {
             // var success = Ipc.TrySetMod.Subscriber(smsw.PluginInterface).Invoke("Zfox Serious Base", "dances/memes/[OCN] Drop the bass","[OCN] Drop the bass",false);
             // smsw.Logger.Info("TrySetMod success: {0}", success);
             if (ImGui.Button("Execute")) {
-                var success = Ipc.TrySetMod.Subscriber(smsw.PluginInterface).Invoke("Zfox Serious Base", modList[selectedModIdx].PenumbraPath, modList[selectedModIdx].ModName, true);
-                smsw.Logger.Info("TrySetMod success: {0}", success);
+                var success = Ipc.TrySetMod.Subscriber(SMSW.PluginInterface).Invoke("Zfox Serious Base", modList[selectedModIdx].PenumbraPath, modList[selectedModIdx].ModName, true);
+                SMSW.Logger.Info("TrySetMod success: {0}", success);
 
-                smsw.ChatHelper.SendSanitizedChatMessage(emoteList[selectedEmoteIdx].TextCommand.Value?.Command.ToString() ?? "");
+                SMSW.ChatHelper.SendSanitizedChatMessage(emoteList[selectedEmoteIdx].TextCommand.Value?.Command.ToString() ?? "");
 
                 Task delay = asyncTask();
                 //delay.Wait();

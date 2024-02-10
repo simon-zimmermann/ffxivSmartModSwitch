@@ -7,42 +7,38 @@ using Newtonsoft.Json;
 namespace SmartModSwitch;
 
 public sealed class CommandHandler : IDisposable {
-    private readonly SmartModSwitch smsw;
-
     private const string CmdStringSMSW = "/smsw";
     private const string CmdStringDebug = "/smsw_debug";
 
-    public CommandHandler(SmartModSwitch smsw) {
-        this.smsw = smsw;
-
-        smsw.CommandManager.AddHandler(CmdStringSMSW, new CommandInfo(this.CommandHandlerSMSW) {
+    public CommandHandler() {
+        SMSW.CommandManager.AddHandler(CmdStringSMSW, new CommandInfo(this.CommandHandlerSMSW) {
             HelpMessage = "A useful message to display in /xlhelp"
         });
-        smsw.CommandManager.AddHandler(CmdStringDebug, new CommandInfo(this.CommandHandlerDebug) {
+        SMSW.CommandManager.AddHandler(CmdStringDebug, new CommandInfo(this.CommandHandlerDebug) {
             HelpMessage = "A useful message to display in /xlhelp"
         });
     }
 
     public void Dispose() {
-        smsw.CommandManager.RemoveHandler(CmdStringSMSW);
-        smsw.CommandManager.RemoveHandler(CmdStringDebug);
+        SMSW.CommandManager.RemoveHandler(CmdStringSMSW);
+        SMSW.CommandManager.RemoveHandler(CmdStringDebug);
     }
 
     private void CommandHandlerSMSW(string command, string args) {
-        smsw.Logger.Info("CommandHandlerSMSW called");
-        smsw.UIManager.MainWindow.IsOpen = !smsw.UIManager.MainWindow.IsOpen;
+        SMSW.Logger.Info("CommandHandlerSMSW called");
+        SMSW.UIManager.MainWindow.IsOpen = !SMSW.UIManager.MainWindow.IsOpen;
     }
     private void CommandHandlerDebug(string command, string args) {
         //helpful: https://github.com/Ottermandias/Penumbra.Api/blob/main/IPenumbraApi.cs
-        smsw.Logger.Info("CommandHandlerDebug called");
-        var pGetColl = Ipc.GetCurrentCollectionName.Subscriber(smsw.PluginInterface);
+        SMSW.Logger.Info("CommandHandlerDebug called");
+        var pGetColl = Ipc.GetCurrentCollectionName.Subscriber(SMSW.PluginInterface);
         var currentCollection = pGetColl!.Invoke();
-        smsw.Logger.Info("Current collection: {0}", currentCollection);
+        SMSW.Logger.Info("Current collection: {0}", currentCollection);
 
-        var modlist = smsw.PenumbraIPC.GetModList();
-        smsw.Logger.Info("Modlist:");
+        var modlist = SMSW.PenumbraIPC.GetModList();
+        SMSW.Logger.Info("Modlist:");
         foreach (var mod in modlist) {
-            smsw.Logger.Info("Mod: {0} {1}", mod.ModName, mod.PenumbraPath);
+            SMSW.Logger.Info("Mod: {0} {1}", mod.ModName, mod.PenumbraPath);
         }
 
         // var penumbraConfig = Ipc.GetConfiguration.Subscriber(smsw.PluginInterface).Invoke();

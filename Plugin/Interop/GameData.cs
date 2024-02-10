@@ -10,15 +10,15 @@ public class GameData : IDisposable {
     public readonly List<EmoteCategory> emoteCategories = [];
     public readonly List<string> emoteCategoryNames = [];
 
-    public GameData(SmartModSwitch smsw) {
-        var emoteSheet = smsw.DataManager.GetExcelSheet<Emote>();
+    public GameData() {
+        var emoteSheet = SMSW.DataManager.GetExcelSheet<Emote>();
         if (emoteSheet != null)
             foreach (var item in emoteSheet)
                 if (item.Name != null && item.Name != "") {
                     emotes.Add(item);
                     emoteNames.Add(item.Name);
                 }
-        var emoteCategorySheet = smsw.DataManager.GetExcelSheet<EmoteCategory>();
+        var emoteCategorySheet = SMSW.DataManager.GetExcelSheet<EmoteCategory>();
         if (emoteCategorySheet != null)
             foreach (var item in emoteCategorySheet)
                 if (item.Name != null && item.Name != "") {
