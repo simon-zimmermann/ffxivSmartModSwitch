@@ -6,6 +6,7 @@ using System.Numerics;
 
 namespace SmartModSwitch.UI.ImGuiExt;
 public class ImGuiUtil {
+    public static readonly ImGuiWindowFlags defaultPopupFlags = ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoSavedSettings;
     private static int uniqueIdCounter = 1000;
     public static string GetUniqueIdSuffix() {
         uniqueIdCounter++;
@@ -39,9 +40,8 @@ public class ImGuiUtil {
         return ret;
     }
     public static bool IconButtonDelete() {
-        bool ret = false;
+        //bool ret = false;
         bool isEnabled = ImGui.IsKeyDown(ImGuiKey.ModCtrl);
-        string suffix = GetUniqueIdSuffix();
 
         ImGui.BeginDisabled(!isEnabled);
         if (isEnabled) {
@@ -49,12 +49,11 @@ public class ImGuiUtil {
             ImGui.PushStyleColor(ImGuiCol.Button, new Vector4(0.6f, 0, 0, 1));
         }
         ImGui.PushFont(UiBuilder.IconFont);
-        if (ImGui.Button(FontAwesomeIcon.Trash.ToIconString() + suffix))
-            ret = true;
+        bool ret = IconButton(FontAwesomeIcon.Trash);
         ImGui.PopFont();
 
         if (isEnabled)
-            ImGui.PopStyleColor(2);
+           ImGui.PopStyleColor(2);
         ImGui.EndDisabled();
 
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
@@ -63,10 +62,10 @@ public class ImGuiUtil {
         return ret;
     }
     public static Vector2 DeleteButtonSize() {
-        return CalcButtonSize("del");
+        return IconButtonSize(FontAwesomeIcon.Trash);
     }
     public static bool Combo(string label, ref int current, string[] items) {
         return ImGui.Combo(label, ref current, items, items.Length);
     }
-    
+
 }

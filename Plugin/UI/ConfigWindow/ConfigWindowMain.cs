@@ -10,17 +10,17 @@ using System.Linq;
 using Lumina.Excel.GeneratedSheets;
 using SmartModSwitch.Interop;
 
-namespace SmartModSwitch.UI;
+namespace SmartModSwitch.UI.ConfigWindow;
 
-public class ConfigWindow : Window, IDisposable {
+public class ConfigWindowMain : Window, IDisposable {
 	private readonly SmartModSwitch smsw;
-	private readonly SelectListWidget<Asg> assignmentGroups;
+	private readonly ModifyListWidget<Asg> assignmentGroups;
 	private Asg? selectedGroup;
-	private SelectListWidget<AsgModsEntry>? activeModsList;
+	private ModifyListWidget<AsgModsEntry>? activeModsList;
 	private readonly SearchGroupedListWidget<Emote, EmoteCategory> emoteSelection;
 	private readonly List<PenumbraMod> availableMods;
 
-	public ConfigWindow(SmartModSwitch smsw) : base(
+	public ConfigWindowMain(SmartModSwitch smsw) : base(
 		"SmartModSwitch Config", ImGuiWindowFlags.NoCollapse) {
 		this.smsw = smsw;
 		SizeConstraints = new WindowSizeConstraints {
@@ -31,12 +31,13 @@ public class ConfigWindow : Window, IDisposable {
 
 		// UI
 		string popup_value = "";
-		assignmentGroups = new SelectListWidget<Asg>(smsw.Config.AssignmentGroups, "Assignment Groups") {
+		assignmentGroups = new ModifyListWidget<Asg>(smsw.Config.AssignmentGroups, "Assignment Groups") {
 			OnItemClick = (entry, index) => {
 				AssignmentGroupSelected(entry);
-
 			},
-			DrawCallPopup = () => {
+			DrawCallAddItem = (firstOpen) => {
+				if (firstOpen)
+					ImGui.SetKeyboardFocusHere(0);
 				ImGui.InputText("Assignment group name", ref popup_value, 100);
 				if (ImGui.Button("OK")) {
 					ImGui.CloseCurrentPopup();
@@ -45,18 +46,11 @@ public class ConfigWindow : Window, IDisposable {
 					return obj;
 				}
 				return null;
-			},
-			DrawCallListItem = (entry, index, isSelected) => {
-				return ImGui.Selectable($"{entry.Name}##{index}", isSelected);
 			}
 		};
 		emoteSelection = new SearchGroupedListWidget<Emote, EmoteCategory>("Select Emote", smsw.GameData.emotes, smsw.GameData.emoteCategories) {
-			ItemToString = (entry) => {
-				return entry.Name;
-			},
-			CategoryToString = (entry) => {
-				return entry.Name;
-			},
+			ItemToString = (entry) => { return entry.Name; },
+			CategoryToString = (entry) => { return entry.Name; },
 			IsItemInCategory = (item, category) => {
 				EmoteCategory? itemcat = item.EmoteCategory.Value;
 				if (itemcat != null)
@@ -64,33 +58,23 @@ public class ConfigWindow : Window, IDisposable {
 				else return false;
 			}
 		};
-
-		AssignmentGroupSelected(smsw.Config.AssignmentGroups[0]);
+		AssignmentGroupSelected(assignmentGroups.SelectedItem);
 	}
-	private void AssignmentGroupSelected(Asg group) {
+	private void AssignmentGroupSelected(Asg? group) {
+		if (group == null)
+			return;
 		smsw.Logger.Info($"Selected Assignment group: {group.Name}");
 		selectedGroup = group;
 
 		//re-create mod select window
 		int selectedNewModIdx = -1;
-		var modSelection = new SearchGroupedListWidget<PenumbraMod, string>("Select Mod", availableMods, []) {
-			ItemToString = (entry) => {
-				return entry.ModName;
-			},
-			CategoryToString = (entry) => {
-				return "";
-			},
-			IsItemInCategory = (item, category) => {
-				return true;
-			}
-		};
-		activeModsList = new SelectListWidget<AsgModsEntry>(selectedGroup.Mods, "Active Mods") {
+		var modSelection = new SearchGroupedListWidget<PenumbraMod, string>("Select Mod", availableMods, []);
+		activeModsList = new ModifyListWidget<AsgModsEntry>(selectedGroup.Mods, "Active Mods") {
 			OnItemClick = (entry, index) => {
 				smsw.Logger.Info($"Selected Mod entry: {entry}");
 			},
-			DrawCallPopup = () => {
+			DrawCallAddItem = (firstOpen) => {
 				modSelection.Draw(ref selectedNewModIdx);
-				//ImGui.InputText("Mod name", ref popup_value, 100);
 				if (ImGui.Button("OK")) {
 					ImGui.CloseCurrentPopup();
 					var obj = new AsgModsEntry(availableMods[selectedNewModIdx]);
@@ -99,15 +83,14 @@ public class ConfigWindow : Window, IDisposable {
 				}
 
 				return null;
-			},
-			DrawCallListItem = (entry, index, isSelected) => {
-				return ImGui.Selectable($"{entry.Mod.ModName}##{index}", isSelected);
 			}
 		};
 	}
 	public void Dispose() { }
 
-	private void DrawAssgSettings(Asg currentGroup) {
+	private void DrawAssgSettings(Asg? currentGroup) {
+		if (currentGroup == null)
+			return;
 		ImGui.Text("Assignment Group Settings");
 		bool enabled = currentGroup.Enabled;
 		if (ImGui.Checkbox("Enabled", ref enabled))
@@ -170,17 +153,19 @@ public class ConfigWindow : Window, IDisposable {
 		{
 			ImGui.BeginChild("right", new Vector2(ImGui.GetContentRegionAvail().X, -1));
 			if (selectedGroup != null && activeModsList != null) {
+				var selectedItem = activeModsList.SelectedItem;
 				activeModsList.Draw();
-				if (ImGui.Button("Test")) {
-					smsw.Logger.Info("Test button pressed");
-					var selected = activeModsList.SelectedItem;
-					var notSelected = selectedGroup.Mods.Where(x => x != selected).ToList();
-					smsw.Logger.Info("Activating: {0}", selected.Mod.ModName);
-					foreach (var mod in notSelected) {
-						smsw.Logger.Info("Deactivating: {0}", mod.Mod.ModName);
+				if (selectedItem != null) {
+					if (ImGui.Button("Test")) {
+						smsw.Logger.Info("Test button pressed");
+						var notSelected = selectedGroup.Mods.Where(x => x != selectedItem).ToList();
+						smsw.Logger.Info("Activating: {0}", selectedItem.Mod.ModName);
+						foreach (var mod in notSelected) {
+							smsw.Logger.Info("Deactivating: {0}", mod.Mod.ModName);
+						}
+						var emote = smsw.GameData.emotes[selectedGroup.EmoteIdx];
+						smsw.Logger.Info("Executing emote: {0}", emote.TextCommand.Value?.Command ?? "NO");
 					}
-					var emote = smsw.GameData.emotes[selectedGroup.EmoteIdx];
-					smsw.Logger.Info("Executing emote: {0}", emote.TextCommand.Value?.Command ?? "NO");
 				}
 			}
 

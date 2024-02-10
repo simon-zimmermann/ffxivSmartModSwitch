@@ -21,12 +21,18 @@ public class Asg {
 	public Asg(string name) {
 		Name = name;
 	}
+	public override string ToString() {
+		return Name;
+	}
 }
 public class AsgModsEntry {
 	public PenumbraMod Mod { get; set; }
 	public bool Enabled { get; set; } = false;
 	public AsgModsEntry(PenumbraMod mod) {
 		Mod = mod;
+	}
+	public override string ToString() {
+		return Mod.ModName;
 	}
 }
 

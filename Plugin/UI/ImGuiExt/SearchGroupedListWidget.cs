@@ -14,20 +14,21 @@ namespace SmartModSwitch.UI.ImGuiExt;
 /// T2: The type of the categories, which the user can select in a dropdown.
 /// </summary>
 public class SearchGroupedListWidget<T1, T2> where T1 : class where T2 : class {
-    /// <summary>
     /// The text visible in the search input field.
     /// Will be reset on re-open
-    /// </summary>
     private string searchText = "";
     private int selectedCategoryIdx = 0;
+    private readonly string label;
     private readonly List<T1> listItems;
-    List<T1> filteredItems = [];
-    List<T1> selectedItems = [];
     private readonly List<T2> listCategories;
     public string[] listCategoryStrings = [];
-    private readonly string label;
-    public Func<T1, string> ItemToString { private get; set; } = (val) => "CALLBACK NOT SET: ItemToString";
-    private Func<T2, string> _categoryToString = (val) => "CALLBACK NOT SET: CategoryToString";
+    //temp lists for filtering
+    List<T1> filteredItems = [];
+    List<T1> selectedItems = [];
+    //callback to convert an item to a string
+    public Func<T1, string> ItemToString { private get; set; } = (val) => val.ToString() ?? "NULL";
+    private Func<T2, string> _categoryToString = (val) => val.ToString() ?? "NULL";
+    //callback to convert a category to a string
     public Func<T2, string> CategoryToString {
         private get { return _categoryToString; }
         set {
@@ -40,7 +41,8 @@ public class SearchGroupedListWidget<T1, T2> where T1 : class where T2 : class {
                 listCategoryStrings[i + 1] = value(listCategories[i]);
         }
     }
-    public Func<T1, T2, bool> IsItemInCategory { private get; set; } = (item, category) => false;
+    //callback to check if an item is in a category
+    public Func<T1, T2, bool> IsItemInCategory { private get; set; } = (item, category) => true;
 
     public SearchGroupedListWidget(string label, List<T1> listItems, List<T2> listCategories) {
         this.listItems = listItems;
@@ -98,7 +100,7 @@ public class SearchGroupedListWidget<T1, T2> where T1 : class where T2 : class {
             ImGui.OpenPopup("##popup");
         }
 
-        if (ImGui.BeginPopup("##popup", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoSavedSettings)) {
+        if (ImGui.BeginPopup("##popup", ImGuiUtil.defaultPopupFlags)) {
             //reset & set focus when popup is drawn the first time after opening
             if (triggerPopupOpen) {
                 searchText = "";

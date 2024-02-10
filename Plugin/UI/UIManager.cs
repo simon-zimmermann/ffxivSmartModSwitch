@@ -2,13 +2,15 @@ using System;
 using SmartModSwitch.UI;
 using Dalamud.Interface.Windowing;
 using System.IO;
+using SmartModSwitch.UI.ConfigWindow;
 
 namespace SmartModSwitch.UI;
+
 
 public sealed class UIManager : IDisposable {
 	private readonly SmartModSwitch smsw;
 	public WindowSystem WindowSystem = new(SmartModSwitch.Name);
-	public ConfigWindow ConfigWindow { get; init; }
+	public ConfigWindowMain ConfigWindow { get; init; }
 	public MainWindow MainWindow { get; init; }
 	public OverlayWindow OverlayWindow { get; init; }
 	public NewAssignmentWindow NewAssignmentWindow { get; init; }
@@ -19,7 +21,7 @@ public sealed class UIManager : IDisposable {
 		var imagePath = Path.Combine(smsw.PluginInterface.AssemblyLocation.Directory?.FullName!, "Assets", "goat.png");
 		var goatImage = smsw.PluginInterface.UiBuilder.LoadImage(imagePath);
 
-		ConfigWindow = new ConfigWindow(smsw);
+		ConfigWindow = new ConfigWindowMain(smsw);
 		MainWindow = new MainWindow(smsw, goatImage);
 		OverlayWindow = new OverlayWindow(smsw);
 		NewAssignmentWindow = new NewAssignmentWindow(smsw);
