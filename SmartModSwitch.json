@@ -8,5 +8,6 @@
         "UI",
         "utility",
         "emote"
-    ]
+    ],
+    "RepoUrl": "https://example.com/"
 }
