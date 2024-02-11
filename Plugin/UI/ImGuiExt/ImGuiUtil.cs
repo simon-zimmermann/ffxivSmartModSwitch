@@ -33,7 +33,6 @@ public class ImGuiUtil {
         return ret;
     }
     public static bool IconButtonDelete() {
-        //bool ret = false;
         bool isEnabled = ImGui.IsKeyDown(ImGuiKey.ModCtrl);
 
         ImGui.BeginDisabled(!isEnabled);

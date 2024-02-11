@@ -34,10 +34,8 @@ public sealed class CommandHandler : IDisposable {
                 }
             }
         }
-
         //if no match found, open config window
         SMSW.UIManager.ConfigWindow.IsOpen = true;
-
     }
 }
 

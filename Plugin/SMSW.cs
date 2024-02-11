@@ -56,10 +56,6 @@ public sealed class SMSW : IDalamudPlugin {
 
 		//init UI last, as it may access all other modules
 		UIManager = new UIManager();
-
-
-		//ChatHelper.SendSanitizedChatMessage("/echo wat");
-
 	}
 
 	public void Dispose() {

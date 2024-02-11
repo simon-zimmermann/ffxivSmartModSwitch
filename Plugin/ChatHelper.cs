@@ -10,12 +10,9 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 
 namespace SmartModSwitch;
 
-public unsafe class ChatHelper : IDisposable{
-    // Code heavily borrowed from ascclemens' XivCommon
+public sealed unsafe class ChatHelper : IDisposable {
+    // Code heavily borrowed from ascclemens' XivCommon (read: stolen)
     // https://git.anna.lgbt/ascclemens/XivCommon/src/branch/main/XivCommon/Functions/Chat.cs
-
-
-
     private static class Signatures {
         internal const string SendChatMessage = "48 89 5C 24 ?? 57 48 83 EC 20 48 8B FA 48 8B D9 45 84 C9";
         internal const string SanitizeChatString = "E8 ?? ?? ?? ?? EB 0A 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8D";
@@ -42,14 +39,10 @@ public unsafe class ChatHelper : IDisposable{
         if (commandOnly && !text.StartsWith("/")) {
             throw new ArgumentException(@"The specified message message does not start with a slash while in command-only mode.", nameof(text));
         }
-
         text = text.ReplaceLineEndings(" ");
-
         var utfMessage = Utf8String.FromString(text);
-        this.SanitizeString(utfMessage);
-
-        this.SendChatMessage(utfMessage);
-
+        SanitizeString(utfMessage);
+        SendChatMessage(utfMessage);
         utfMessage->Dtor(true);
     }
 
@@ -58,28 +51,23 @@ public unsafe class ChatHelper : IDisposable{
     /// </summary>
     /// <param name="utfString">A pointer to the string to sanitize.</param>
     private void SanitizeString(Utf8String* utfString) {
-        if (this._sanitizeChatString == null) {
+        if (_sanitizeChatString == null)
             throw new InvalidOperationException("Could not find the signature for SanitizeString!");
-        }
-
-        this._sanitizeChatString(utfString, 0x27F, nint.Zero);
+        _sanitizeChatString(utfString, 0x27F, nint.Zero);
     }
 
     private void SendChatMessage(Utf8String* utfMessage) {
-        if (this._processChatBoxEntry == null) {
+        if (_processChatBoxEntry == null)
             throw new InvalidOperationException("Could not find the signature for SendChatMessage!");
-        }
-
         switch (utfMessage->Length) {
             case 0:
                 throw new ArgumentException(@"Message cannot be empty", nameof(utfMessage));
             case > 500:
                 throw new ArgumentException(@"Message cannot exceed 500 byte limit", nameof(utfMessage));
         }
-
-        this._processChatBoxEntry(Framework.Instance()->GetUiModule(), utfMessage, nint.Zero, 0);
+        _processChatBoxEntry(Framework.Instance()->GetUiModule(), utfMessage, nint.Zero, 0);
     }
 
-	public void Dispose() {
-	}
+    public void Dispose() {
+    }
 }
