@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Dalamud.Game.Text.SeStringHandling;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
-using SmartModSwitch.Interop;
-
 namespace SmartModSwitch.UI.ImGuiExt;
 
 /// <summary>

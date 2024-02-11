@@ -1,7 +1,4 @@
-
-
 using System.Collections.Generic;
-using System.Linq;
 using ImGuiNET;
 using SmartModSwitch.Data;
 using SmartModSwitch.Interop;
@@ -9,11 +6,11 @@ using SmartModSwitch.UI.ImGuiExt;
 
 namespace SmartModSwitch.UI.Config;
 
-public class AsgModsInGroup {
+public class AsgGroupDetails {
     private Asg group;
     private ModifyListWidget<AsgModsEntry> activeModsList;
     private readonly List<PenumbraMod> availableMods;
-    public AsgModsInGroup(Asg group) {
+    public AsgGroupDetails(Asg group) {
         this.group = group;
         availableMods = SMSW.PenumbraIPC.GetModList();
 
@@ -34,27 +31,54 @@ public class AsgModsInGroup {
                 }
 
                 return null;
-            }
+            },
+            SaveCallback = SMSW.Config.Save
         };
     }
 
-    public void Draw() {
+    public void DrawModList() {
         //Top: mod list
         activeModsList.Draw();
-
+    }
+    public void DrawModSettings() {
         //Bottom: mod settings
         var selectedItem = activeModsList.SelectedItem;
         if (selectedItem != null) {
             var command = selectedItem.Command;
-            if(ImGui.InputText("Command", ref command, 100))
+            if (ImGui.InputText("Command", ref command, 100)) {
                 selectedItem.Command = command;
-                
+                SMSW.Config.Save();
+            }
+
             if (ImGui.Button("Test")) {
                 SMSW.Logger.Info("Test button pressed");
                 var executor = new AsgModExecutor(group, selectedItem);
                 executor.Execute();
             }
         }
+    }
+    
+    public void DrawGroupSettings() {
+        ImGui.Text("Assignment Group Settings");
+        bool enabled = group.Enabled;
+        if (ImGui.Checkbox("Enabled", ref enabled)) {
+            group.Enabled = enabled;
+            SMSW.Config.Save();
+        }
 
+        int selectedReset = (int)group.Reset;
+        if (ImGuiUtil.Combo("Reset Condition", ref selectedReset, Strings.UIAsgResetStr)) {
+            group.Reset = (AsgReset)selectedReset;
+            SMSW.Config.Save();
+        }
+        if (group.Reset == AsgReset.TIMER) {
+            ImGui.Indent();
+            float enteredResetTime = group.ResetTime;
+            if (ImGui.InputFloat("Reset Time [s]", ref enteredResetTime)) {
+                group.ResetTime = enteredResetTime;
+                SMSW.Config.Save();
+            }
+            ImGui.Unindent();
+        }
     }
 }

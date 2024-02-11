@@ -3,7 +3,6 @@ using System.Numerics;
 using Dalamud.Interface.Internal;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-using SmartModSwitch.Data;
 
 namespace SmartModSwitch.UI;
 
@@ -27,7 +26,7 @@ public class MainWindow : Window, IDisposable {
 	}
 
 	public override void Draw() {
-		ImGui.Text($"The random config bool is {SMSW.Config.SomePropertyToBeSavedAndWithADefault}");
+		//ImGui.Text($"The random config bool is {SMSW.Config.SomePropertyToBeSavedAndWithADefault}");
 
 		if (ImGui.Button("Show Settings")) {
 			SMSW.UIManager.DrawConfigUI();
@@ -40,14 +39,14 @@ public class MainWindow : Window, IDisposable {
 		ImGui.Image(this.GoatImage.ImGuiHandle, new Vector2(this.GoatImage.Width, this.GoatImage.Height));
 		ImGui.Unindent(55);
 
-		var val = SMSW.Config.OverlayActive;
-		if (ImGui.Checkbox("Random Config Bool", ref val)) {
-			SMSW.Config.OverlayActive = val;
-			// can save immediately on change, if you don't want to provide a "Save and Close" button
-			SMSW.Config.Save();
-
-			SMSW.UIManager.OverlayWindow.IsOpen = val;
-		}
+		//var val = SMSW.Config.OverlayActive;
+		//if (ImGui.Checkbox("Random Config Bool", ref val)) {
+		//	SMSW.Config.OverlayActive = val;
+		//	// can save immediately on change, if you don't want to provide a "Save and Close" button
+		//	SMSW.Config.Save();
+//
+		//	SMSW.UIManager.OverlayWindow.IsOpen = val;
+		//}
 
 	}
 }

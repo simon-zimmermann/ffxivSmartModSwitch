@@ -1,17 +1,10 @@
 using Dalamud.Interface;
 using ImGuiNET;
-using System;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace SmartModSwitch.UI.ImGuiExt;
 public class ImGuiUtil {
     public static readonly ImGuiWindowFlags defaultPopupFlags = ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoSavedSettings;
-    private static int uniqueIdCounter = 1000;
-    public static string GetUniqueIdSuffix() {
-        uniqueIdCounter++;
-        return "##" + uniqueIdCounter;
-    }
     public static Vector2 CalcButtonSize(string text) {
         return ImGui.CalcTextSize(text) + ImGui.GetStyle().ItemInnerSpacing * 2 + ImGui.GetStyle().FramePadding * 2;
     }

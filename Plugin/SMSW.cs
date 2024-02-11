@@ -63,7 +63,6 @@ public sealed class SMSW : IDalamudPlugin {
 	}
 
 	public void Dispose() {
-		Config.Save();
 		UIManager.Dispose();
 		CommandHandler.Dispose();
 		PenumbraIPC.Dispose();

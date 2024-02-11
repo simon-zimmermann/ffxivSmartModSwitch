@@ -11,7 +11,6 @@ namespace SmartModSwitch.Data;
 /// </summary>
 [Serializable]
 public class Asg {
-	//public string Name { get; set; }
 	public bool Enabled { get; set; } = false;
 	public AsgType Type { get; set; } = AsgType.NOTHING;
 	public int EmoteIdx { get; set; } = 0;

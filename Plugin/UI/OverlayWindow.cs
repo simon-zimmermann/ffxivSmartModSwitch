@@ -1,6 +1,5 @@
 using System;
 using System.Numerics;
-using Dalamud.Interface.Internal;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
@@ -22,7 +21,7 @@ public class OverlayWindow : Window, IDisposable {
     }
 
     public override void Draw() {
-        ImGui.Text($"The random config bool is {SMSW.Config.SomePropertyToBeSavedAndWithADefault}");
+        //ImGui.Text($"The random config bool is {SMSW.Config.SomePropertyToBeSavedAndWithADefault}");
 
         if (ImGui.Button("Show Settings")) {
             SMSW.UIManager.DrawConfigUI();

@@ -16,6 +16,7 @@ public class ModifyListWidget<T> where T : class {
 	/// Called on click on the add button. Use it to draw contents of a poput, setaup is already done
 	/// If the user has accepted, return a new item, which will be added to the list
 	public Func<bool, T?> DrawCallAddItem { private get; set; } = (firstOpen) => { return null; };
+	public Action SaveCallback { private get; set; } = () => { };
 	public T? SelectedItem {
 		get {
 			if (selectedIdx < 0 || selectedIdx >= items.Count)
@@ -61,7 +62,7 @@ public class ModifyListWidget<T> where T : class {
 		}
 
 		//main list
-		ImGui.BeginListBox("", new Vector2(-1, 500));
+		ImGui.BeginListBox("", new Vector2(-1, 400));
 		for (int n = 0; n < items.Count; n++) {
 			string itemStr = ItemToString(items[n]);
 			bool isSelected = selectedIdx == n;
@@ -78,8 +79,10 @@ public class ModifyListWidget<T> where T : class {
 		T? createdItem = null;
 		if (ImGui.BeginPopup("input_popup", ImGuiUtil.defaultPopupFlags)) {
 			createdItem = DrawCallAddItem(triggerPopupOpen);
-			if (createdItem != null)
+			if (createdItem != null) {
 				items.Add(createdItem);
+				SaveCallback();
+			}
 			ImGui.EndPopup();
 		}
 	}

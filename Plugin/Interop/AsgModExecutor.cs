@@ -1,10 +1,7 @@
 using System.Linq;
-using System.Threading;
-using Penumbra.Api;
 using SmartModSwitch.Data;
-using SmartModSwitch.Interop;
 
-namespace SmartModSwitch;
+namespace SmartModSwitch.Interop;
 
 public class AsgModExecutor {
     private readonly Asg group;

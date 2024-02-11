@@ -1,28 +1,22 @@
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using SmartModSwitch.Data;
 using SmartModSwitch.UI.ImGuiExt;
 using Dalamud.Interface;
-using System.Linq;
-using Lumina.Excel.GeneratedSheets;
-using SmartModSwitch.Interop;
 
 namespace SmartModSwitch.UI.Config;
 
 public class WindowMain : Window, IDisposable {
 	private readonly ModifyListWidget<Asg> assignmentGroups;
 
-	private AsgSettings asgSettings;
-	private AsgModsInGroup? asgActiveModList;
+	private AsgGroupDetails? asgGroupDetails;
 	private AsgAddGroupPopup asgAddGroupPopup;
 
-	public WindowMain() : base(
-		"SmartModSwitch Config", ImGuiWindowFlags.NoCollapse) {
+	public WindowMain() : base("SmartModSwitch Config") {
 		SizeConstraints = new WindowSizeConstraints {
-			MinimumSize = new Vector2(800, 600),
+			MinimumSize = new Vector2(600, 800),
 			MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
 		};
 
@@ -32,9 +26,9 @@ public class WindowMain : Window, IDisposable {
 			OnItemClick = (entry, index) => {
 				AssignmentGroupSelected(entry);
 			},
-			DrawCallAddItem = asgAddGroupPopup.Draw
+			DrawCallAddItem = asgAddGroupPopup.Draw,
+			SaveCallback = SMSW.Config.Save
 		};
-		asgSettings = new AsgSettings();
 
 
 		AssignmentGroupSelected(assignmentGroups.SelectedItem);
@@ -43,7 +37,7 @@ public class WindowMain : Window, IDisposable {
 		if (group == null)
 			return;
 		SMSW.Logger.Info($"Selected Assignment group: {group.ToString()}");
-		asgActiveModList = new AsgModsInGroup(group);
+		asgGroupDetails = new AsgGroupDetails(group);
 	}
 	public void Dispose() { }
 
@@ -53,10 +47,6 @@ public class WindowMain : Window, IDisposable {
 			Vector2 buttonSize = ImGuiUtil.IconButtonSize(FontAwesomeIcon.Save, "Save");
 			ImGui.BeginChild("top", new Vector2(-1, buttonSize.Y));
 			ImGui.Text("Create and select assignment groups on the left, assign mods on the right.");
-			ImGui.SameLine(ImGui.GetContentRegionAvail().X - buttonSize.X);
-			if (ImGuiUtil.IconButton(FontAwesomeIcon.Save, "Save")) {
-				SMSW.Config.Save();
-			}
 			ImGui.EndChild();
 		}
 		{
@@ -64,13 +54,14 @@ public class WindowMain : Window, IDisposable {
 			assignmentGroups.Draw();
 			ImGui.Separator();
 			if (assignmentGroups.SelectedItem != null)
-				asgSettings.Draw(assignmentGroups.SelectedItem);
+				asgGroupDetails?.DrawGroupSettings();
 			ImGui.EndChild();
 		}
 		ImGui.SameLine();
 		{
 			ImGui.BeginChild("right", new Vector2(ImGui.GetContentRegionAvail().X, -1));
-			asgActiveModList?.Draw();
+			asgGroupDetails?.DrawModList();
+			asgGroupDetails?.DrawModSettings();
 			ImGui.EndChild();
 		}
 

@@ -1,8 +1,6 @@
 using System;
-using SmartModSwitch.UI;
 using Dalamud.Interface.Windowing;
 using System.IO;
-using SmartModSwitch.Data;
 
 namespace SmartModSwitch.UI;
 

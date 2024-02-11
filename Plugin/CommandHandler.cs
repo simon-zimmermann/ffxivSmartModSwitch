@@ -1,9 +1,6 @@
 using System;
 using Dalamud.Game.Command;
-using Penumbra.Api;
-using Lumina.Excel.GeneratedSheets;
-using System.Linq;
-using Newtonsoft.Json;
+using SmartModSwitch.Interop;
 namespace SmartModSwitch;
 
 public sealed class CommandHandler : IDisposable {
