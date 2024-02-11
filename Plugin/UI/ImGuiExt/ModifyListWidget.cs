@@ -55,6 +55,7 @@ public class ModifyListWidget<T> where T : class {
 		if (ImGuiUtil.IconButtonDelete()) {
 			if (selectedIdx >= 0 && selectedIdx < items.Count) {
 				items.RemoveAt(selectedIdx);
+				SaveCallback();
 				if (items.Count > 0) {
 					selectedIdx = Math.Max(0, selectedIdx - 1);
 					OnItemClick(items[selectedIdx], selectedIdx);

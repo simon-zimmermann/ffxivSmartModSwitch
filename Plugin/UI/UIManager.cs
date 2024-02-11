@@ -27,7 +27,7 @@ public sealed class UIManager : IDisposable {
 		SMSW.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
 
 		//debug
-		ConfigWindow.IsOpen = true;
+		//ConfigWindow.IsOpen = true;
 
 	}
 
