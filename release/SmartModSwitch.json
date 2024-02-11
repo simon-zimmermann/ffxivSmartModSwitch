@@ -22,6 +22,6 @@
     "DownloadLinkInstall": "https://github.com/simon-zimmermann/ffxivSmartModSwitch/raw/main/release/latest.zip",
     "DownloadLinkTesting": "https://github.com/simon-zimmermann/ffxivSmartModSwitch/raw/main/release/latest.zip",
     "DownloadLinkUpdate":  "https://github.com/simon-zimmermann/ffxivSmartModSwitch/raw/main/release/latest.zip",
-    "IconUrl": "https://github.com/simon-zimmermann/ffxivSmartModSwitch/raw/main/release/icon.png"
+    "IconUrl": "https://raw.githubusercontent.com/simon-zimmermann/ffxivSmartModSwitch/main/release/icon.png"
   }
 ]
