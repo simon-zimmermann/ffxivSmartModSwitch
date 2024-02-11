@@ -26,9 +26,13 @@ public sealed class PenumbraIPC : IDisposable {
         return ret;
     }
     public void SetModState(PenumbraMod mod, bool state) {
-        var collection = Ipc.GetCurrentCollectionName.Subscriber(SMSW.PluginInterface).Invoke();
+        (var valid, var individual, var collection) = Ipc.GetCollectionForObject.Subscriber(SMSW.PluginInterface).Invoke(0); //0 => current character
+        if (!valid) {
+            SMSW.Logger.Error("Failed to get collection for current character");
+            return;
+        }
         var success = Ipc.TrySetMod.Subscriber(SMSW.PluginInterface).Invoke(collection, mod.PenumbraPath, mod.ModName, state);
-        SMSW.Logger.Info($"Mod {mod.PenumbraPath} set to state {state} in collection {collection}; Success: {success}");
+        SMSW.Logger.Info($"Mod {mod.PenumbraPath} set to state {state} in collection {collection} (individual: {individual}); Success: {success}");
     }
     public void Dispose() {
     }
