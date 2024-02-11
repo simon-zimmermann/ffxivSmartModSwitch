@@ -9,7 +9,6 @@ namespace SmartModSwitch.Interop;
 
 public record PenumbraMod(string ModName, string FileSystemPath, string PenumbraPath);
 public sealed class PenumbraIPC : IDisposable {
-
     /// <summary>
     /// Builds a list of all available mods, and their penumbra directories
     /// </summary>
@@ -33,6 +32,9 @@ public sealed class PenumbraIPC : IDisposable {
         }
         var success = Ipc.TrySetMod.Subscriber(SMSW.PluginInterface).Invoke(collection, mod.PenumbraPath, mod.ModName, state);
         SMSW.Logger.Info($"Mod {mod.PenumbraPath} set to state {state} in collection {collection} (individual: {individual}); Success: {success}");
+    }
+    public bool GetPenumbraEnabled() {
+        return Ipc.GetEnabledState.Subscriber(SMSW.PluginInterface).Invoke();
     }
     public void Dispose() {
     }

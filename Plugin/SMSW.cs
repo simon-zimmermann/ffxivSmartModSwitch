@@ -49,6 +49,9 @@ public sealed class SMSW : IDalamudPlugin {
 		CommandHandler = new CommandHandler();
 
 		Logger.Info("Initializing SmartModSwitch");
+		if(!PenumbraIPC.GetPenumbraEnabled()) {
+			Logger.Error("Penumbra is not enabled. SmartModSwitch may not work.");
+		}
 
 		// plugin function modules
 		Config = PluginInterface.GetPluginConfig() as ModConfig ?? new ModConfig();

@@ -7,6 +7,7 @@ using Dalamud.Interface;
 namespace SmartModSwitch.UI.ImGuiExt;
 
 public class ModifyListWidget<T> where T : class {
+	private const int listboxHeight = 10;
 	private readonly List<T> items;
 	/// Called when an item is clicked
 	/// Parameters: clicked item, index of clicked item
@@ -62,7 +63,7 @@ public class ModifyListWidget<T> where T : class {
 		}
 
 		//main list
-		ImGui.BeginListBox("", new Vector2(-1, 400));
+		ImGui.BeginListBox("", new Vector2(-1, ImGui.GetTextLineHeightWithSpacing() * listboxHeight));
 		for (int n = 0; n < items.Count; n++) {
 			string itemStr = ItemToString(items[n]);
 			bool isSelected = selectedIdx == n;

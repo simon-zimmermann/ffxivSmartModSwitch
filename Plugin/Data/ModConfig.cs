@@ -6,8 +6,7 @@ namespace SmartModSwitch.Data {
     [Serializable]
     public class ModConfig : IPluginConfiguration {
         public int Version { get; set; } = 0;
-
-        public List<Asg> AssignmentGroups { get; } = new List<Asg>();
+        public List<Asg> AssignmentGroups { get; } = [];
 
         public void Initialize() {
         }

@@ -8,15 +8,15 @@ using Dalamud.Interface;
 
 namespace SmartModSwitch.UI.Config;
 
-public class WindowMain : Window, IDisposable {
+public sealed class WindowMain : Window, IDisposable {
 	private readonly ModifyListWidget<Asg> assignmentGroups;
 
 	private AsgGroupDetails? asgGroupDetails;
-	private AsgAddGroupPopup asgAddGroupPopup;
+	private readonly AsgAddGroupPopup asgAddGroupPopup;
 
 	public WindowMain() : base("SmartModSwitch Config") {
 		SizeConstraints = new WindowSizeConstraints {
-			MinimumSize = new Vector2(600, 800),
+			MinimumSize = new Vector2(300, 300),
 			MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
 		};
 
@@ -36,7 +36,6 @@ public class WindowMain : Window, IDisposable {
 	private void AssignmentGroupSelected(Asg? group) {
 		if (group == null)
 			return;
-		SMSW.Logger.Info($"Selected Assignment group: {group.ToString()}");
 		asgGroupDetails = new AsgGroupDetails(group);
 	}
 	public void Dispose() { }

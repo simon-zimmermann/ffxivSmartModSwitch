@@ -8,7 +8,7 @@ public class AsgModExecutor {
     private readonly AsgModsEntry entry;
     public AsgModExecutor(Asg group, AsgModsEntry mod) {
         this.group = group;
-        this.entry = mod;
+        entry = mod;
     }
     public void Execute() {
         SMSW.PenumbraIPC.SetModState(entry.PenumbraMod, true);
@@ -19,7 +19,7 @@ public class AsgModExecutor {
         }
 
         var emote = SMSW.GameData.emotes[group.EmoteIdx];
-        SMSW.Logger.Info("Executing emote: {0}", emote.TextCommand.Value?.Command ?? "EMOTE COMMAND NOT FOUND");
+        SMSW.Logger.Debug("Executing emote: {0}", emote.TextCommand.Value?.Command ?? "EMOTE COMMAND NOT FOUND");
         SMSW.ChatHelper.SendSanitizedChatMessage(emote.TextCommand.Value?.Command.ToString() ?? "");
     }
 }
